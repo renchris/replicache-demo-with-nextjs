@@ -26,6 +26,9 @@ dependencies:
   react-dom:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
+  replicache:
+    specifier: ^13.0.1
+    version: 13.0.1
   typescript:
     specifier: 5.2.2
     version: 5.2.2
@@ -1332,6 +1335,22 @@ packages:
       picocolors: 1.0.0
       tslib: 2.6.2
     dev: true
+
+  /@rocicorp/lock@1.0.3:
+    resolution: {integrity: sha512-aXRTG0Ul89KrV30J/p209RhMCRLIFFIT6RepvCPBicKTHaUtTlmJipgLl6QmSt5HJYYJ5P8Czp+4T4G1+6fcgQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      '@rocicorp/resolver': 1.0.1
+    dev: false
+
+  /@rocicorp/logger@5.2.1:
+    resolution: {integrity: sha512-/co4DJq3opjULOHe7hMAho/E2WJuv6rMOJ1QDlCKsPHZ09XkkKHDM8dPu+odmDHWBb5aMnnzC92WQLd05CTxnA==}
+    dev: false
+
+  /@rocicorp/resolver@1.0.1:
+    resolution: {integrity: sha512-9+IK9C/du8Nrqn3LaKBxJwV4H2HyIpa7HlTuc4eQ938lL4faxN6TuQV+IpvX6PxQeR14X7yMtz1f9dfiS5fvlw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dev: false
 
   /@rushstack/eslint-patch@1.4.0:
     resolution: {integrity: sha512-cEjvTPU32OM9lUFegJagO0mRnIn+rbqrG89vV8/xLnLFX0DoR0r1oy5IlTga71Q7uT3Qus7qm7wgeiMT/+Irlg==}
@@ -5575,6 +5594,16 @@ packages:
       retext-smartypants: 5.2.0
       unist-util-visit: 4.1.2
     dev: true
+
+  /replicache@13.0.1:
+    resolution: {integrity: sha512-dgGHxpCubx2woDyXsh6AeqZ3KwU0IEqyXU6IZ13f6YAH+Ik5P969CxsnTmxZmPdX7WQseZ4jQotCkWLeJlEeJg==}
+    engines: {node: '>=14.8.0'}
+    hasBin: true
+    dependencies:
+      '@rocicorp/lock': 1.0.3
+      '@rocicorp/logger': 5.2.1
+      '@rocicorp/resolver': 1.0.1
+    dev: false
 
   /resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
