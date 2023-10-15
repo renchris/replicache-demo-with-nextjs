@@ -22,7 +22,9 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/app/*"],
-      "@styled-system/*": ["styled-system/*"]
+      "@styled-system/*": ["styled-system/*"],
+      "@replicache/*": ["replicache/*"],
+      "@components/*": ["components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
