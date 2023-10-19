@@ -6,8 +6,11 @@ import { useEffect, useState } from 'react'
 const ReplicacheIDBName = () => {
   const [idbName, setIdbName] = useState('')
   useEffect(() => {
-    const rep = getReplicache()
-    setIdbName(rep.idbName)
+    const getRep = async () => {
+      const { rep } = await getReplicache()
+      setIdbName(rep.idbName)
+    }
+    getRep()
   }, [])
 
   return (
