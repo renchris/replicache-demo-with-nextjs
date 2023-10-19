@@ -2,6 +2,7 @@
 
 import { css } from '@styled-system/css'
 import ReplicacheIDBName from '@components/ReplicacheIDBName'
+import IncrementCountButton from '@components/IncrementCountButton'
 
 const HomePage = () => (
   <div>
@@ -11,6 +12,11 @@ const HomePage = () => (
       {' '}
       <ReplicacheIDBName />
     </p>
+    <p>
+      Increment Count:
+      {' '}
+    </p>
+    <IncrementCountButton />
   </div>
 )
 export default HomePage
