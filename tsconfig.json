@@ -24,7 +24,7 @@
       "@app/*": ["src/app/*"],
       "@styled-system/*": ["styled-system/*"],
       "@replicache/*": ["replicache/*"],
-      "@components/*": ["components/*"]
+      "@components/*": ["src/components/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
