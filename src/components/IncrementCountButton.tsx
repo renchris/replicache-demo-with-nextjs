@@ -1,10 +1,16 @@
 'use client'
 
-import { useState } from 'react'
-import { incrementButton } from '@app/replicacheActions'
+import { useEffect, useState } from 'react'
+import { incrementButton, subscribeButton } from '@app/replicacheActions'
 
 const IncrementCountButton = () => {
   const [count, setCount] = useState(0)
+  useEffect(() => {
+    const subscribe = async () => {
+      await subscribeButton(setCount)
+    }
+    subscribe()
+  }, [])
   const handleClick = async () => {
     const ret = await incrementButton()
     setCount(ret)
