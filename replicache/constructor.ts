@@ -2,9 +2,9 @@
 
 import { Replicache } from 'replicache'
 import TUTORIAL_LICENSE_KEY from '@replicache/license'
-
 import type { WriteTransaction } from 'replicache'
 import initSpace from './space'
+import type { MessageWithID } from './types'
 
 export const serverURL = 'https://replicache-counter-pr-6.onrender.com'
 
@@ -31,13 +31,30 @@ const getReplicache = async (): Promise<{ rep: IReplicache, spaceID: string }> =
   return { rep, spaceID }
 }
 
-const getChatReplicache = (): Replicache | null => {
+const getChatReplicache = (): Replicache<{
+  createMessage: (tx: WriteTransaction, {
+    id, from, content, order,
+  }: MessageWithID) => Promise<void> }> | null => {
   const rep = typeof window !== 'undefined'
     ? new Replicache({
       name: 'chat-user-id',
       licenseKey: process.env.LICENSE_KEY ?? TUTORIAL_LICENSE_KEY,
       pushURL: '/api/replicache-push',
       pullURL: '/api/replicache-pull',
+      mutators: {
+        async createMessage(
+          tx: WriteTransaction,
+          {
+            id, from, content, order,
+          }: MessageWithID,
+        ) {
+          await tx.put(`message/${id}`, {
+            from,
+            content,
+            order,
+          })
+        },
+      },
     })
     : null
 

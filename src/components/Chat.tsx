@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react'
 import { useSubscribe } from 'replicache-react'
 import type { Message } from '@replicache/types'
 import { getChatReplicache } from '@replicache/constructor'
+import { nanoid } from 'nanoid'
 
 const rep = getChatReplicache()
 
@@ -37,7 +38,17 @@ const Chat = () => {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // TODO: Create message
+    const lastPosition = messages.length ? messages[messages.length - 1][1].order : 0
+    const order = lastPosition + 1
+    if (rep) {
+      rep.mutate.createMessage({
+        id: nanoid(),
+        from: username,
+        content,
+        order,
+      })
+      setContent('')
+    }
   }
 
   return (
