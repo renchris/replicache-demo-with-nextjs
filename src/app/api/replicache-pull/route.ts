@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 // eslint-disable-next-line import/prefer-default-export
-export async function GET() {
+export async function POST() {
   try {
     const response = NextResponse.json({
       // We will discuss these two fields in later steps.

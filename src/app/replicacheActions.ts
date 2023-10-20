@@ -1,7 +1,9 @@
 'use client'
 
-import getReplicache, { serverURL } from '@replicache/constructor'
+import { getChatReplicache, getReplicache, serverURL } from '@replicache/constructor'
 import { Dispatch, SetStateAction } from 'react'
+import { useSubscribe } from 'replicache-react'
+import type { Message } from '@replicache/types'
 
 export const incrementButton = async (): Promise<number> => {
   const { rep } = await getReplicache()
@@ -34,4 +36,21 @@ export const openPokeConnection = async () => {
       rep.pull()
     }
   }
+}
+
+export const subscribeToMessages = () => {
+  const rep = getChatReplicache()
+  const messages = useSubscribe(
+    rep,
+    async (tx) => {
+      const list = (await tx
+        .scan({ prefix: 'message/' })
+        .entries()
+        .toArray()) as [string, Message][]
+      list.sort(([, { order: a }], [, { order: b }]) => a - b)
+      return list
+    },
+    [],
+  )
+  return messages
 }

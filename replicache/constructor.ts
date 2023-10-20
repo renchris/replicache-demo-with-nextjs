@@ -31,4 +31,20 @@ const getReplicache = async (): Promise<{ rep: IReplicache, spaceID: string }> =
   return { rep, spaceID }
 }
 
-export default getReplicache
+const getChatReplicache = (): Replicache | null => {
+  const rep = typeof window !== 'undefined'
+    ? new Replicache({
+      name: 'chat-user-id',
+      licenseKey: process.env.LICENSE_KEY ?? TUTORIAL_LICENSE_KEY,
+      pushURL: '/api/replicache-push',
+      pullURL: '/api/replicache-pull',
+    })
+    : null
+
+  return rep
+}
+
+export {
+  getReplicache,
+  getChatReplicache,
+}

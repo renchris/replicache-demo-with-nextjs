@@ -1,6 +1,6 @@
 'use client'
 
-import getReplicache from '@replicache/constructor'
+import { getReplicache } from '@replicache/constructor'
 import { useEffect, useState } from 'react'
 
 const ReplicacheIDBName = () => {
