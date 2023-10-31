@@ -6,7 +6,7 @@ import { MessageWithID } from '@replicache/types'
 import { replicacheServer, replicacheClient, message } from 'drizzle/schema'
 import db, { serverID } from 'db'
 
-export async function getLastMutationID(clientID: string) {
+async function getLastMutationID(clientID: string) {
   const clientRowStatementQuery = db
     .select({ last_mutation_id: replicacheClient.last_mutation_id })
     .from(replicacheClient)
@@ -18,7 +18,7 @@ export async function getLastMutationID(clientID: string) {
   return clientRow?.last_mutation_id || 0
 }
 
-export async function createMessage(
+async function createMessage(
   {
     id, from, content, order,
   }: MessageWithID,
@@ -39,7 +39,7 @@ export async function createMessage(
   insertMessageStatementQuery.run()
 }
 
-export async function setLastMutationID(
+async function setLastMutationID(
   clientID: string,
   clientGroupID: string,
   mutationID: number,
