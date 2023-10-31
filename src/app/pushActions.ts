@@ -1,8 +1,8 @@
 'use server'
 
 import { eq } from 'drizzle-orm'
-import { MutationV1 } from 'replicache'
-import { MessageWithID } from '@replicache/types'
+import type { MutationV1 } from 'replicache'
+import type { MessageWithID } from '@replicache/types'
 import { replicacheServer, replicacheClient, message } from 'drizzle/schema'
 import db, { serverID } from 'db'
 

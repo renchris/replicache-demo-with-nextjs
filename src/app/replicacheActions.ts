@@ -1,5 +1,6 @@
 'use client'
 
+import type { Dispatch, SetStateAction } from 'react'
 import { getChatReplicache, getReplicache, serverURL } from '@replicache/constructor'
 import { Dispatch, SetStateAction } from 'react'
 import { useSubscribe } from 'replicache-react'
