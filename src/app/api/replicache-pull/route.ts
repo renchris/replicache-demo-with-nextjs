@@ -18,6 +18,6 @@ export async function POST(request: Request) {
     console.error((error as Error).message)
     return new Response(JSON.stringify({ message: (error as Error).message }), { status: 500 })
   } finally {
-    console.log('Processed push in', Date.now() - t0)
+    console.log('Processed pull in', Date.now() - t0)
   }
 }
