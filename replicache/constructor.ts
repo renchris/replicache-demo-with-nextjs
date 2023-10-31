@@ -16,7 +16,7 @@ const getReplicache = async (): Promise<{ rep: IReplicache, spaceID: string }> =
   const spaceID = await initSpace(serverURL)
   const rep = new Replicache({
     name: 'user42',
-    licenseKey: process.env.LICENSE_KEY ?? TUTORIAL_LICENSE_KEY,
+    licenseKey: process.env.REPLICACHE_LICENSE_KEY ?? TUTORIAL_LICENSE_KEY,
     pushURL: `${serverURL}/api/replicache/push?spaceID=${spaceID}`,
     pullURL: `${serverURL}/api/replicache/pull?spaceID=${spaceID}`,
     mutators: {
@@ -38,7 +38,7 @@ const getChatReplicache = (): Replicache<{
   const rep = typeof window !== 'undefined'
     ? new Replicache({
       name: 'chat-user-id',
-      licenseKey: process.env.LICENSE_KEY ?? TUTORIAL_LICENSE_KEY,
+      licenseKey: process.env.REPLICACHE_LICENSE_KEY ?? TUTORIAL_LICENSE_KEY,
       pushURL: '/api/replicache-push',
       pullURL: '/api/replicache-pull',
       mutators: {
