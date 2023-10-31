@@ -1,5 +1,6 @@
 'use server'
 
+import Pusher from 'pusher'
 import { eq } from 'drizzle-orm'
 import type { MutationV1 } from 'replicache'
 import type { MessageWithID } from '@replicache/types'
@@ -142,5 +143,16 @@ export async function processMutation(
 }
 
 export async function sendPoke() {
-// TODO
+  const pusher = new Pusher({
+    appId: 'app-id',
+    key: 'app-key',
+    secret: 'app-secret',
+    useTLS: false,
+    cluster: '',
+    host: '127.0.0.1',
+    port: '6001',
+  })
+  pusher.trigger('default-channel', 'poke-event', {})
+  const t0 = Date.now()
+  console.log('👉 Sent poke in', Date.now() - t0)
 }

@@ -1,10 +1,11 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, useEffect } from 'react'
 import { useSubscribe } from 'replicache-react'
 import type { Message } from '@replicache/types'
 import { getChatReplicache } from '@replicache/constructor'
 import { nanoid } from 'nanoid'
+import { listen } from '@app/replicacheActions'
 
 const rep = getChatReplicache()
 
@@ -21,6 +22,10 @@ const Chat = () => {
     },
     [],
   )
+
+  useEffect(() => {
+    listen(rep)
+  }, [])
 
   const [username, setUsername] = useState<string>('')
   const [content, setContent] = useState<string>('')
