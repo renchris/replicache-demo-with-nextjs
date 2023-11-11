@@ -1,25 +1,29 @@
-type Message = {
-  from: string;
-  content: string;
-  order: number;
-}
-
-export type MessageWithID = Message & { id: string }
-
 export type Affected = {
   listIDs: string[];
   userIDs: string[];
 }
 
+export type Cookie = {
+  order: number;
+  clientGroupID: string;
+}
+
+export type SearchResult = {
+  id: string;
+  rowVersion: number;
+}
+
+type ClientViewData = Map<string, number>
+
 /**
  * A Client View Record (CVR) is a minimal representation of a Client View snapshot.
  * In other words, it captures what data a Client Group had at a particular moment in time.
  */
-type ClientViewRecord = {
-  // Value of ReplicacheClientGroup.clientVersion at time of generation.
+export type ClientViewRecord = {
+  list: ClientViewData;
+  todo: ClientViewData;
+  share: ClientViewData;
   clientVersion: number;
-  // Map of key->version pairs, one for each entity in the client view.
-  entities: Record<string, number>;
 }
 
 /**
@@ -38,7 +42,7 @@ type ClientViewRecord = {
 export type ClientGroupRecord = {
   id: string;
   userID?;
-  clientVersion: number;
+  clientGroupVersion: number;
   cvrVersion: number | null;
 }
 
@@ -49,11 +53,22 @@ export type ClientRecord = {
   clientVersion: number;
 }
 
-// Each of your domain entities will have one extra field.
-type Todo = {
-// ... fields needed for your application (id, title, complete, etc)
-  // Incremented each time this row is updated.
-  // Note this is not the same as the global or per-space versioning scheme.
-  // Each entity has their *own* version which increments independently.
-  version: number;
+export type Todo = {
+  id: string;
+  listID: string;
+  text: string;
+  complete: boolean;
+  sort: number;
+}
+
+export type Share = {
+  id: string;
+  listID: string;
+  userID: string;
+}
+
+export type List = {
+  id: string,
+  name: string,
+  ownerID: string,
 }
