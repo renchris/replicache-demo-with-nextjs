@@ -3,104 +3,134 @@
 import Pusher from 'pusher'
 import { eq } from 'drizzle-orm'
 import type { MutationV1 } from 'replicache'
-import type { MessageWithID } from '@replicache/types'
-import { replicacheServer, replicacheClient, message } from 'drizzle/schema'
-import db, { serverID } from 'db'
+import type {
+  Affected, ClientGroupRecord, ClientRecord, List as ReplicacheList, Share, Todo,
+} from '@replicache/types'
+import {
+  replicacheClient,
+} from 'drizzle/schema'
+import db from 'db'
+import { getClientGroupForUpdate, putClientGroup } from './sharedActions'
+import {
+  createList, createShare, createTodo, deleteList, deleteShare, deleteTodo, updateTodo,
+} from './appActions'
 
-async function getLastMutationID(clientID: string) {
+function getClient(
+  clientID: string,
+): Omit<ClientRecord, 'id'> {
   const clientRowStatementQuery = db
-    .select({ last_mutation_id: replicacheClient.last_mutation_id })
+    .select({
+      clientGroupID: replicacheClient.clientGroupID,
+      lastMutationID: replicacheClient.lastMutationID,
+      clientVersion: replicacheClient.clientVersion,
+    })
     .from(replicacheClient)
     .where(eq(replicacheClient.id, clientID))
     .prepare()
 
-  const clientRow = clientRowStatementQuery.get()
+  const clientRow = clientRowStatementQuery.get() || {
+    clientGroupID: '',
+    lastMutationID: 0,
+    clientVersion: 0,
+  }
 
-  return clientRow?.last_mutation_id || 0
+  return clientRow
 }
 
-async function createMessage(
-  {
-    id, from, content, order,
-  }: MessageWithID,
-  version: number,
-) {
-  const insertMessageStatementQuery = db
-    .insert(message)
-    .values({
-      id,
-      sender: from,
-      content,
-      ord: order,
-      deleted: false,
-      version,
-    })
-    .prepare()
-
-  insertMessageStatementQuery.run()
-}
-
-async function setLastMutationID(
+function getClientForUpdate(
   clientID: string,
-  clientGroupID: string,
-  mutationID: number,
-  version: number,
-) {
-  const resultStatementQuery = db
-    .update(replicacheClient)
-    .set({
-      client_group_id: clientGroupID,
-      last_mutation_id: mutationID,
-      version,
-    })
-    .where(eq(replicacheClient.id, clientID))
-    .prepare()
-
-  const result = resultStatementQuery.run()
-
-  if (result.changes === 0) {
-    const insertStatementQuery = db
-      .insert(replicacheClient)
-      .values({
-        id: clientID,
-        client_group_id: clientGroupID,
-        last_mutation_id: mutationID,
-        version,
-      })
-      .prepare()
-
-    insertStatementQuery.run()
+): ClientRecord {
+  const previousClient = getClient(clientID)
+  return {
+    id: clientID,
+    clientGroupID: previousClient.clientGroupID,
+    lastMutationID: previousClient.lastMutationID,
+    clientVersion: previousClient.clientVersion,
   }
 }
 
-export async function processMutation(
+function mutate(
+  userID: string,
+  mutation: MutationV1,
+): Affected {
+  switch (mutation.name) {
+    case 'createList':
+      return createList(userID, mutation.args as ReplicacheList)
+    case 'deleteList':
+      return deleteList(userID, mutation.args as string)
+    case 'createTodo':
+      return createTodo(userID, mutation.args as Omit<Todo, 'sort'>)
+    case 'createShare':
+      return createShare(userID, mutation.args as Share)
+    case 'deleteShare':
+      return deleteShare(userID, mutation.args as string)
+    case 'updateTodo':
+      return updateTodo(userID, mutation.args as Todo)
+    case 'deleteTodo':
+      return deleteTodo(userID, mutation.args as string)
+    default:
+      return {
+        listIDs: [],
+        userIDs: [],
+      }
+  }
+}
+
+function putClient(
+  client: ClientRecord,
+) {
+  const {
+    id, clientGroupID, lastMutationID, clientVersion,
+  } = client
+  const insertClientStatementQuery = db
+    .insert(replicacheClient)
+    .values({
+      id,
+      clientGroupID,
+      lastMutationID,
+      clientVersion,
+      lastModified: new Date(),
+    })
+    .onConflictDoUpdate({
+      target: replicacheClient.id,
+      set: {
+        lastMutationID,
+        clientVersion,
+        lastModified: new Date(),
+      },
+    })
+    .prepare()
+
+  insertClientStatementQuery.run()
+}
+
+export function processMutation(
   clientGroupID: string,
+  userID: string,
   mutation: MutationV1,
   error?: string | undefined,
 ) {
-  const { clientID } = mutation
+  let affected: Affected = { listIDs: [], userIDs: [] }
+  console.log(
+    error === null ? 'Processing mutation' : 'Processing mutation error',
+    JSON.stringify(mutation, null, ''),
+  )
 
-  // Get the previous version and calculate the next one.
-  const previousVersionStatementQuery = db
-    .select({ version: replicacheServer.version })
-    .from(replicacheServer)
-    .where(eq(replicacheServer.id, serverID))
-    .prepare()
+  const baseClientGroup = getClientGroupForUpdate(clientGroupID)
+  const baseClient = getClientForUpdate(mutation.clientID)
 
-  const previousVersionStatement = previousVersionStatementQuery.get()
-  const previousVersion = previousVersionStatement?.version ?? 0
-  const nextVersion = previousVersion + 1
+  console.log('baseClientGroup', { baseClientGroup }, 'baseClient', { baseClient })
 
-  const lastMutationID = await getLastMutationID(clientID)
-  const nextMutationID = lastMutationID + 1
+  const nextClientVersion = baseClientGroup.clientGroupVersion + 1
+  const nextMutationID = baseClient.lastMutationID + 1
 
-  console.log('nextVersion', nextVersion, 'nextMutationID', nextMutationID)
+  console.log('nextClientVersion', nextClientVersion, 'nextMutationID', nextMutationID)
 
   // It's common due to connectivity issues for clients to send a
   // mutation which has already been processed. Skip these.
   if (mutation.id < nextMutationID) {
     console.log(`Mutation ${mutation.id} has already been processed - skipping`)
-    return
+    return { affected }
   }
 
   // If the Replicache client is working correctly, this can never
@@ -112,34 +142,33 @@ export async function processMutation(
 
   if (error === undefined) {
     console.log('Processing mutation:', JSON.stringify(mutation))
-
-    // For each possible mutation, run the server-side logic to apply the
-    // mutation.
-    switch (mutation.name) {
-      case 'createMessage':
-        await createMessage(mutation.args as MessageWithID, nextVersion)
-        break
-      default:
-        throw new Error(`Unknown mutation: ${mutation.name}`)
-    }
-  } else {
+    try {
+      affected = mutate(userID, mutation)
+    } catch {
     // TODO: You can store state here in the database to return to clients to
     // provide additional info about errors.
-    console.log('Handling error from mutation', JSON.stringify(mutation), error)
+      console.log('Handling error from mutation', JSON.stringify(mutation), error)
+      throw new Error(`Unknown mutation: ${mutation.name}`)
+    }
   }
 
-  console.log('setting', clientID, 'last_mutation_id to', nextMutationID)
+  const nextClientGroup: ClientGroupRecord = {
+    id: clientGroupID,
+    cvrVersion: baseClientGroup.cvrVersion,
+    clientGroupVersion: nextClientVersion,
+  }
 
-  // Update lastMutationID for requesting client.
-  await setLastMutationID(clientID, clientGroupID, nextMutationID, nextVersion)
+  const nextClient: ClientRecord = {
+    id: mutation.clientID,
+    clientGroupID,
+    lastMutationID: nextMutationID,
+    clientVersion: nextClientVersion,
+  }
 
-  // Update global version.
-  const updateVersionStatementQuery = db.update(replicacheServer)
-    .set({ version: nextVersion })
-    .where(eq(replicacheServer.id, serverID))
-    .prepare()
+  putClientGroup(nextClientGroup)
+  putClient(nextClient)
 
-  updateVersionStatementQuery.run()
+  return { affected }
 }
 
 export async function sendPoke() {
