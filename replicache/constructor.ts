@@ -5,6 +5,8 @@ import TUTORIAL_LICENSE_KEY from '@replicache/license'
 import type { WriteTransaction } from 'replicache'
 import initSpace from './space'
 import type { MessageWithID } from './types'
+import mutators from './mutators'
+import type { Mutators } from './mutators'
 
 export const serverURL = 'https://replicache-counter-pr-6.onrender.com'
 
@@ -61,7 +63,22 @@ const getChatReplicache = (): Replicache<{
   return rep
 }
 
+const getRowVersioningReplicache = (): Replicache<Mutators> | null => {
+  const rep = typeof window !== 'undefined'
+    ? new Replicache({
+      name: 'unique-and-user-specific-replicache-database-name',
+      licenseKey: process.env.REPLICACHE_LICENSE_KEY ?? TUTORIAL_LICENSE_KEY,
+      pushURL: '/api/replicache-push',
+      pullURL: '/api/replicache-pull',
+      mutators,
+    })
+    : null
+
+  return rep
+}
+
 export {
   getReplicache,
   getChatReplicache,
+  getRowVersioningReplicache,
 }
