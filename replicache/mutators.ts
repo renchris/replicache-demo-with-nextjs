@@ -1,6 +1,11 @@
 import { ReadTransaction, WriteTransaction } from 'replicache'
 import { List, Share, Todo } from './types'
 
+export const getList = async (tx: ReadTransaction, listID: string) => {
+  const list = await tx.get(`list/${listID}`)
+  return list as List | undefined
+}
+
 export const listLists = async (tx: ReadTransaction) => {
   const lists = await tx
     .scan({
