@@ -12,6 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ark-ui/anatomy": "^1.1.0",
     "@ark-ui/react": "^1.1.0",
     "@next/eslint-plugin-next": "^13.5.2",
     "@pandacss/dev": "^0.18.3",

@@ -55,6 +55,9 @@ const button = defineRecipe({
         _hover: {
           background: 'gray.a2',
         },
+        _active: {
+          background: 'gray.a3',
+        },
         _disabled: {
           borderColor: 'border.disabled',
           color: 'fg.disabled',
