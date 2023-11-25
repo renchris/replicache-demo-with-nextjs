@@ -61,7 +61,7 @@ export type InsertShare = InferInsertModel<typeof share>
 export const item = sqliteTable('item', {
   id: text('id').primaryKey().notNull(),
   listID: text('list_id').notNull(),
-  title: text('title').primaryKey().notNull(),
+  title: text('title').notNull(),
   complete: integer('complete', { mode: 'boolean' }).notNull(),
   ord: integer('ord').notNull(),
   rowVersion: integer('row_version').notNull(),
