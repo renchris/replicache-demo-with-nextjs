@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Layout from '@components/Layout'
 import Lists from '@components/Lists'
+import TodoApp from '@components/TodoApp'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,6 +15,7 @@ const RootLayout = () => (
     <body className={inter.className}>
       <Layout>
         <Lists />
+        <TodoApp />
       </Layout>
     </body>
   </html>
