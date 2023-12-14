@@ -1,29 +1,52 @@
-import * as Ark from '@ark-ui/react/dialog'
-import { styled } from 'styled-system/jsx'
-import { dialog, type DialogVariantProps } from 'styled-system/recipes'
+import { Dialog as ArkDialog } from '@ark-ui/react'
+import { styled, type HTMLStyledProps } from 'styled-system/jsx'
+import { dialog } from 'styled-system/recipes'
 import { createStyleContext } from 'src/lib/create-style-context'
 
 const { withProvider, withContext } = createStyleContext(dialog)
 
-export * from '@ark-ui/react/dialog'
-export type DialogProps = Ark.DialogProps & DialogVariantProps
+const Dialog = withProvider(ArkDialog.Root)
+const DialogBackdrop = withContext(styled(ArkDialog.Backdrop), 'backdrop')
+const DialogCloseTrigger = withContext(styled(ArkDialog.CloseTrigger), 'closeTrigger')
+const DialogContent = withContext(styled(ArkDialog.Content), 'content')
+const DialogDescription = withContext(styled(ArkDialog.Description), 'description')
+const DialogPositioner = withContext(styled(ArkDialog.Positioner), 'positioner')
+const DialogTitle = withContext(styled(ArkDialog.Title), 'title')
+const DialogTrigger = withContext(styled(ArkDialog.Trigger), 'trigger')
 
-const DialogRoot = withProvider(styled(Ark.Dialog.Root))
-export const DialogBackdrop = withContext(styled(Ark.Dialog.Backdrop), 'backdrop')
-export const DialogCloseTrigger = withContext(styled(Ark.Dialog.CloseTrigger), 'closeTrigger')
-export const DialogContent = withContext(styled(Ark.Dialog.Content), 'content')
-export const DialogDescription = withContext(styled(Ark.Dialog.Description), 'description')
-export const DialogPositioner = withContext(styled(Ark.Dialog.Positioner), 'positioner')
-export const DialogTitle = withContext(styled(Ark.Dialog.Title), 'title')
-export const DialogTrigger = withContext(styled(Ark.Dialog.Trigger), 'trigger')
+const Root = Dialog
+const Backdrop = DialogBackdrop
+const CloseTrigger = DialogCloseTrigger
+const Content = DialogContent
+const Description = DialogDescription
+const Positioner = DialogPositioner
+const Title = DialogTitle
+const Trigger = DialogTrigger
 
-export const Dialog = Object.assign(DialogRoot, {
-  Root: DialogRoot,
-  Backdrop: DialogBackdrop,
-  CloseTrigger: DialogCloseTrigger,
-  Positioner: DialogPositioner,
-  Content: DialogContent,
-  Description: DialogDescription,
-  Title: DialogTitle,
-  Trigger: DialogTrigger,
-})
+export {
+  Backdrop,
+  CloseTrigger,
+  Content,
+  Description,
+  Dialog,
+  DialogBackdrop,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogDescription,
+  DialogPositioner,
+  DialogTitle,
+  DialogTrigger,
+  Positioner,
+  Root,
+  Title,
+  Trigger,
+}
+
+export interface DialogProps extends HTMLStyledProps<typeof Dialog> {}
+export interface DialogBackdropProps extends HTMLStyledProps<typeof DialogBackdrop> {}
+export interface DialogCloseTriggerProps extends HTMLStyledProps<typeof DialogCloseTrigger> {}
+export interface DialogContentProps extends HTMLStyledProps<typeof DialogContent> {}
+export interface DialogDescriptionProps extends HTMLStyledProps<typeof DialogDescription> {}
+export interface DialogPositionerProps extends HTMLStyledProps<typeof DialogPositioner> {}
+export interface DialogTitleProps extends HTMLStyledProps<typeof DialogTitle> {}
+export interface DialogTriggerProps extends HTMLStyledProps<typeof DialogTrigger> {}
