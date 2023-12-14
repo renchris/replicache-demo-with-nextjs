@@ -3,6 +3,7 @@
 import { css } from '@styled-system/css'
 import type { List } from '@replicache/types'
 import { Button } from './Button'
+import DialogComponent from './DialogComponent'
 
 const Header = ({ selectedList }: { selectedList: List | undefined }) => (
   <header id="header">
@@ -38,9 +39,12 @@ const Header = ({ selectedList }: { selectedList: List | undefined }) => (
         id="buttons"
         className={css({ display: 'flex', gap: '8px' })}
       >
-        <Button variant="outline">
-          New List
-        </Button>
+        <DialogComponent>
+          <Button variant="outline">
+            New List
+          </Button>
+        </DialogComponent>
+
         <Button variant="outline" disabled={!selectedList}>
           Delete List
         </Button>
