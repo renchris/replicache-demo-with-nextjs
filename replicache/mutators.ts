@@ -34,6 +34,12 @@ const listTodos = async (tx: ReadTransaction) => {
   return todos as Todo[] | []
 }
 
+export async function todosByList(tx: ReadTransaction, listID: string) {
+  // TODO: would be better to use an index, but rails doesn't support yet.
+  const allTodos = await listTodos(tx)
+  return allTodos.filter((todo) => todo.listID === listID)
+}
+
 export type Mutators = {
   createList: (tx: WriteTransaction, list: List) => Promise<void>;
   deleteList: (tx: WriteTransaction, listID: string) => Promise<void>;
