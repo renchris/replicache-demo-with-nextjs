@@ -1,5 +1,7 @@
 import { ReadTransaction, WriteTransaction } from 'replicache'
-import { List, Share, Todo } from './types'
+import {
+  List, Share, Todo, TodoUpdate,
+} from './types'
 
 export const getList = async (tx: ReadTransaction, listID: string) => {
   const list = await tx.get(`list/${listID}`)
@@ -37,8 +39,8 @@ export type Mutators = {
   deleteList: (tx: WriteTransaction, listID: string) => Promise<void>;
   createShare: (tx: WriteTransaction, share: Share) => Promise<void>;
   deleteShare: (tx: WriteTransaction, shareID: string) => Promise<void>;
-  createTodo: (tx: WriteTransaction, todo: Todo) => Promise<void>;
-  updateTodo: (tx: WriteTransaction, todoUpdate: Todo) => Promise<void>;
+  createTodo: (tx: WriteTransaction, todo: Omit<Todo, 'sort'>) => Promise<void>;
+  updateTodo: (tx: WriteTransaction, todoUpdate: TodoUpdate) => Promise<void>;
   deleteTodo: (tx: WriteTransaction, todoID: string) => Promise<void>;
 }
 
@@ -55,13 +57,13 @@ const mutators = {
   deleteShare: async (tx: WriteTransaction, shareID: string) => {
     await tx.del(`share/${shareID}`)
   },
-  createTodo: async (tx: WriteTransaction, todo: Todo) => {
+  createTodo: async (tx: WriteTransaction, todo: Omit<Todo, 'sort'>) => {
     const todos = await listTodos(tx)
     todos.sort((t1, t2) => t1.sort - t2.sort)
     const maxSort = todos.pop()?.sort ?? 0
     await tx.put(`todo/${todo.id}`, { ...todo, sort: maxSort + 1 })
   },
-  updateTodo: async (tx: WriteTransaction, todoUpdate: Todo) => {
+  updateTodo: async (tx: WriteTransaction, todoUpdate: TodoUpdate) => {
     const { id } = todoUpdate
     const previousTodo = await tx.get(`todo/${id}`) as Todo
     const nextTodo = { ...previousTodo, todoUpdate }

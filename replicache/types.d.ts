@@ -61,6 +61,8 @@ export type Todo = {
   sort: number;
 }
 
+export type TodoUpdate = { id: string } & Partial<Todo>
+
 export type Share = {
   id: string;
   listID: string;
