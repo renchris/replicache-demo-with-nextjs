@@ -128,7 +128,7 @@ export function searchTodosAndShares(listIDs: string[]) {
     .select({
       id: share.id,
       rowVersion: share.rowVersion,
-      type: sql<string>`share`,
+      type: sql<string>`'share'`,
     })
     .from(share)
     .innerJoin(list, eq(share.listID, list.id))
@@ -138,10 +138,10 @@ export function searchTodosAndShares(listIDs: string[]) {
     .select({
       id: item.id,
       rowVersion: item.rowVersion,
-      type: sql<string>`todo`,
+      type: sql<string>`'todo'`,
     })
     .from(item)
-    .where(inArray(list.id, listIDs))
+    .where(inArray(item.listID, listIDs))
 
   const sharesAndTodos = unionAll(
     shareStatementQuery,
