@@ -29,7 +29,7 @@ function getBaseCVR(
   clientGroupID: string,
   cookie: Cookie,
 ) {
-  let previousCVR
+  let previousCVR: ClientViewRecord | undefined
 
   if (typeof cookie === 'object' && cookie !== null && typeof cookie.order === 'number') {
     previousCVR = cvrCache.get(makeCVRKey(clientGroupID, cookie.order))
@@ -194,12 +194,11 @@ function getPatch(
 
 function processPull(
   pull: PullRequestV1,
+  userID: string,
 ): PullResponseV1 {
   const { clientGroupID, cookie } = pull
   const replicacheCookie = cookie as Cookie
   const { previousCVR, baseCVR } = getBaseCVR(clientGroupID, replicacheCookie)
-  // get userID from local/cookie storage or somewhere
-  const userID = '0'
 
   const {
     nextCVRVersion,

@@ -104,7 +104,7 @@ function putClient(
   insertClientStatementQuery.run()
 }
 
-export function processMutation(
+export async function processMutation(
   clientGroupID: string,
   userID: string,
   mutation: MutationV1,

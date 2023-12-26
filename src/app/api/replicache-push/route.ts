@@ -15,12 +15,14 @@ export async function POST(request: Request) {
     console.log('Processing push', JSON.stringify(push))
     t0 = Date.now()
     // get userID from local/cookie storage or somewhere
-    const userID = '0'
 
     push.mutations.forEach(async (mutation: MutationV1) => {
       const t1 = Date.now()
+      const { ownerID } = mutation.args as { [key: string]: string }
       try {
-        const result = db.transaction(() => processMutation(push.clientGroupID, userID, mutation))
+        const result = await db.transaction(
+          () => processMutation(push.clientGroupID, ownerID, mutation),
+        )
         result.affected.listIDs.forEach((affectedListID) => {
           affected.listIDs.add(affectedListID)
         })
@@ -31,7 +33,7 @@ export async function POST(request: Request) {
         console.log(error)
         if (error instanceof Error) {
           const errorMessage = error.message
-          db.transaction(() => processMutation(push.clientGroupID, userID, mutation, errorMessage))
+          db.transaction(() => processMutation(push.clientGroupID, ownerID, mutation, errorMessage))
         }
       }
       console.log('Processed mutation in', Date.now() - t1)
