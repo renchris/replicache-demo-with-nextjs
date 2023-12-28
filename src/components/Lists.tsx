@@ -11,8 +11,7 @@ const Lists = ({ rep }: { rep: Replicache<Mutators> | null }) => (
       display: 'flex',
       flexDir: 'column',
       width: '150px',
-      fontSize: '125%',
-      paddingTop: '155px',
+      paddingTop: '220px',
     })}
     id="navigation"
   >
