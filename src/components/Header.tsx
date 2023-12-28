@@ -5,7 +5,9 @@ import type { List } from '@replicache/types'
 import { Button } from './Button'
 import DialogComponent from './DialogComponent'
 
-const Header = ({ selectedList }: { selectedList: List | undefined }) => (
+const Header = ({ selectedList, userID }: {
+  selectedList: List | undefined, userID: string,
+}) => (
   <header id="header">
     <h1
       className={css({
@@ -33,7 +35,9 @@ const Header = ({ selectedList }: { selectedList: List | undefined }) => (
         id="login"
         className={css({ whiteSpace: 'nowrap' })}
       >
-        User ID: ______
+        User ID:
+        {' '}
+        {userID}
       </div>
       <div
         id="buttons"

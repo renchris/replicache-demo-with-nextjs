@@ -8,7 +8,7 @@ import { type Mutators, getList, todosByList } from '@replicache/mutators'
 import Header from './Header'
 import MainSection from './MainSection'
 
-const TodoApp = ({ rep }: { rep: Replicache<Mutators> | null }) => {
+const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: string }) => {
   const selectedList = useSubscribe(
     rep,
     (tx: ReadTransaction) => getList(tx, listID),
@@ -30,7 +30,10 @@ const TodoApp = ({ rep }: { rep: Replicache<Mutators> | null }) => {
       })}
       id="todo-app"
     >
-      <Header selectedList={selectedList} />
+      <Header
+        selectedList={selectedList}
+        userID={userID}
+      />
       <MainSection selectedList={selectedList}>
         Main Section Children
       </MainSection>
