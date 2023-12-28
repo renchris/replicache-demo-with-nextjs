@@ -2,12 +2,10 @@
 
 import Link from 'next/link'
 import { useSubscribe } from 'replicache-react'
-import { getRowVersioningReplicache } from '@replicache/constructor'
-import { listLists } from '@replicache/mutators'
+import { type Mutators, listLists } from '@replicache/mutators'
+import type { Replicache } from 'replicache'
 
-const rep = getRowVersioningReplicache()
-
-const DisplayLists = () => {
+const DisplayLists = ({ rep }: { rep: Replicache<Mutators> | null }) => {
   const lists = useSubscribe(rep, listLists, [], [rep])
   return (
     <div>

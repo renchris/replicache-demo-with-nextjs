@@ -1,9 +1,11 @@
-'use server'
+'use client'
 
 import { css } from '@styled-system/css'
+import type { Mutators } from '@replicache/mutators'
+import type { Replicache } from 'replicache'
 import DisplayLists from './DisplayLists'
 
-const Lists = () => (
+const Lists = ({ rep }: { rep: Replicache<Mutators> | null }) => (
   <div
     className={css({
       display: 'flex',
@@ -14,7 +16,7 @@ const Lists = () => (
     })}
     id="navigation"
   >
-    <DisplayLists />
+    <DisplayLists rep={rep} />
   </div>
 )
 
