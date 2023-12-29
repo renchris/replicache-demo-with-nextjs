@@ -2,11 +2,22 @@
 
 import { css } from '@styled-system/css'
 import type { List } from '@replicache/types'
+import type { Dispatch, SetStateAction } from 'react'
 import { Button } from './Button'
 import DialogComponent from './DialogComponent'
 
-const Header = ({ selectedList, userID }: {
-  selectedList: List | undefined, userID: string,
+const Header = ({
+  selectedList,
+  userID,
+  listName,
+  setListName,
+  handleSubmitList,
+}: {
+  selectedList: List | undefined,
+  userID: string,
+  listName: string,
+  setListName: Dispatch<SetStateAction<string>>,
+  handleSubmitList: () => Promise<void>
 }) => (
   <header id="header">
     <h1
@@ -43,7 +54,11 @@ const Header = ({ selectedList, userID }: {
         id="buttons"
         className={css({ display: 'flex', gap: '8px' })}
       >
-        <DialogComponent>
+        <DialogComponent
+          listName={listName}
+          setListName={setListName}
+          handleSubmitList={handleSubmitList}
+        >
           <Button variant="outline">
             New List
           </Button>
