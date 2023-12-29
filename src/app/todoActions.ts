@@ -76,6 +76,10 @@ export const handleNewList = async (
 export const handleDeleteList = async (
   rep: Replicache<Mutators> | null,
   listID: string,
+  router: AppRouterInstance,
 ) => {
-  if (rep) { await rep.mutate.deleteList(listID) }
+  if (rep) {
+    await rep.mutate.deleteList(listID)
+    router.push('/')
+  }
 }

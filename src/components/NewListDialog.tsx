@@ -7,7 +7,7 @@ import { Label } from './Label'
 import type { DialogProps } from './Dialog'
 import * as Dialog from './Dialog'
 
-const DialogComponent = ({
+const NewListDialog = ({
   listName,
   setListName,
   handleSubmitList,
@@ -46,12 +46,14 @@ const DialogComponent = ({
                   Cancel
                 </Button>
               </Dialog.CloseTrigger>
-              <Button
-                width="full"
-                onClick={() => handleSubmitList()}
-              >
-                Confirm
-              </Button>
+              <Dialog.CloseTrigger asChild>
+                <Button
+                  width="full"
+                  onClick={() => handleSubmitList()}
+                >
+                  Confirm
+                </Button>
+              </Dialog.CloseTrigger>
             </Stack>
           </Stack>
           <Dialog.CloseTrigger asChild position="absolute" top="2" right="2">
@@ -65,4 +67,4 @@ const DialogComponent = ({
   </Dialog.Root>
 )
 
-export default DialogComponent
+export default NewListDialog

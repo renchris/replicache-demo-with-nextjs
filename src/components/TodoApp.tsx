@@ -6,7 +6,7 @@ import type { ReadTransaction, Replicache } from 'replicache'
 import { css } from '@styled-system/css'
 import { type Mutators, getList, todosByList } from '@replicache/mutators'
 import { useState } from 'react'
-import { handleNewList } from '@app/todoActions'
+import { handleDeleteList as deleteList, handleNewList } from '@app/todoActions'
 import Header from './Header'
 import MainSection from './MainSection'
 
@@ -39,6 +39,15 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
     }
     setListName('')
   }
+  const handleDeleteList = async () => {
+    if (listID) {
+      await deleteList(
+        rep,
+        listID,
+        router,
+      )
+    }
+  }
   return (
     <div
       className={css({
@@ -53,6 +62,7 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
         listName={listName}
         setListName={setListName}
         handleSubmitList={handleSubmitList}
+        handleDeleteList={handleDeleteList}
       />
       <MainSection selectedList={selectedList}>
         Main Section Children

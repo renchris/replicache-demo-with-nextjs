@@ -4,7 +4,8 @@ import { css } from '@styled-system/css'
 import type { List } from '@replicache/types'
 import type { Dispatch, SetStateAction } from 'react'
 import { Button } from './Button'
-import DialogComponent from './DialogComponent'
+import NewListDialog from './NewListDialog'
+import DeleteListDialog from './DeleteListDialog'
 
 const Header = ({
   selectedList,
@@ -12,12 +13,15 @@ const Header = ({
   listName,
   setListName,
   handleSubmitList,
+  handleDeleteList,
 }: {
   selectedList: List | undefined,
   userID: string,
   listName: string,
   setListName: Dispatch<SetStateAction<string>>,
-  handleSubmitList: () => Promise<void>
+  handleSubmitList: () => Promise<void>,
+  handleDeleteList: () => Promise<void>,
+
 }) => (
   <header id="header">
     <h1
@@ -54,7 +58,7 @@ const Header = ({
         id="buttons"
         className={css({ display: 'flex', gap: '8px' })}
       >
-        <DialogComponent
+        <NewListDialog
           listName={listName}
           setListName={setListName}
           handleSubmitList={handleSubmitList}
@@ -62,11 +66,15 @@ const Header = ({
           <Button variant="outline">
             New List
           </Button>
-        </DialogComponent>
-
-        <Button variant="outline" disabled={!selectedList}>
-          Delete List
-        </Button>
+        </NewListDialog>
+        <DeleteListDialog
+          selectedListName={selectedList ? selectedList.name : 'no selected list'}
+          handleDeleteList={handleDeleteList}
+        >
+          <Button variant="outline" disabled={!selectedList}>
+            Delete List
+          </Button>
+        </DeleteListDialog>
         <Button variant="outline" disabled={!selectedList}>
           Share
         </Button>
