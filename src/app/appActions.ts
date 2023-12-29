@@ -173,7 +173,6 @@ function requireAccessToList(
     .select({ listID: share.listID })
     .from(share)
     .where(eq(share.userID, accessingUserID))
-    .as('shareListIdSubquery')
 
   const listRowStatementQuery = db
     .select({ count: sql<number>`count(*)` })
