@@ -31,7 +31,10 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if (rep) rep.pullURL = `/api/replicache-pull?userID=${userID}`
+    if (rep) {
+      rep.pullURL = `/api/replicache-pull?userID=${userID}`
+      rep.pushURL = `/api/replicache-push?userID=${userID}`
+    }
   }, [userID])
 
   return (
