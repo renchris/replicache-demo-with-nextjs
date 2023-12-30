@@ -25,7 +25,7 @@ const NewListDialog = ({
     </Dialog.Trigger>
     <Portal>
       <Dialog.Backdrop />
-      <Dialog.Positioner height="auto">
+      <Dialog.Positioner top="50dvh" height="0px">
         <Dialog.Content>
           <Stack gap="8" p="6">
             <Stack gap="1">

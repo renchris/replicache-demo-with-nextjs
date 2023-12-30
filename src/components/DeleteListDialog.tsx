@@ -21,7 +21,7 @@ const DeleteListDialog = ({
     </Dialog.Trigger>
     <Portal>
       <Dialog.Backdrop />
-      <Dialog.Positioner height="auto">
+      <Dialog.Positioner top="50dvh" height="0px">
         <Dialog.Content>
           <Stack gap="8" p="6">
             <Dialog.Title>Delete the current list?</Dialog.Title>
