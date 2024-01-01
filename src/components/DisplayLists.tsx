@@ -18,6 +18,7 @@ const DisplayLists = ({ rep }: { rep: Replicache<Mutators> | null }) => {
             display: 'block',
             textAlign: 'right',
             marginBottom: '12px',
+            textDecoration: 'underline',
           })}
         >
           {list.name}

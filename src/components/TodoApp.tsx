@@ -6,7 +6,9 @@ import type { ReadTransaction, Replicache } from 'replicache'
 import { css } from '@styled-system/css'
 import { type Mutators, getList, todosByList } from '@replicache/mutators'
 import { useState } from 'react'
-import { handleDeleteList as deleteList, handleNewList } from '@app/todoActions'
+import {
+  handleDeleteList as deleteList, handleNewItem, handleNewList,
+} from '@app/todoActions'
 import Header from './Header'
 import MainSection from './MainSection'
 
@@ -27,6 +29,7 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
   )
   todos.sort((a, b) => a.sort - b.sort)
   const [listName, setListName] = useState('')
+  const [itemName, setItemName] = useState('')
   const router = useRouter()
   const handleSubmitList = async () => {
     if (listName) {
@@ -48,11 +51,20 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
       )
     }
   }
+  const handleSubmitItem = async (text: string) => {
+    if (text) {
+      await handleNewItem(
+        rep,
+        listID,
+        text,
+      )
+    }
+  }
   return (
     <div
       className={css({
         flex: 1,
-        marginTop: '48px',
+        marginY: '48px',
       })}
       id="todo-app"
     >
@@ -64,9 +76,13 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
         handleSubmitList={handleSubmitList}
         handleDeleteList={handleDeleteList}
       />
-      <MainSection selectedList={selectedList}>
-        Main Section Children
-      </MainSection>
+      <MainSection
+        todos={todos}
+        selectedList={selectedList}
+        itemName={itemName}
+        setItemName={setItemName}
+        handleSubmitItem={handleSubmitItem}
+      />
     </div>
   )
 }
