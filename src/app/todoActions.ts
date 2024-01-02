@@ -2,7 +2,7 @@
 // of these mutators runs immediately (optimistically) locally, then runs
 
 import { Mutators } from '@replicache/mutators'
-import { Todo } from '@replicache/types'
+import { TodoUpdate } from '@replicache/types'
 import { nanoid } from 'nanoid'
 import { Replicache } from 'replicache'
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
@@ -23,11 +23,11 @@ export const handleNewItem = (
   }
 }
 
-export const handleUpdateTodo = (
+export const handleUpdateTodo = async (
   rep: Replicache<Mutators> | null,
-  update: Todo,
+  update: TodoUpdate,
 ) => {
-  if (rep) rep.mutate.updateTodo(update)
+  if (rep) await rep.mutate.updateTodo(update)
 }
 
 export const handleDeleteTodos = async (

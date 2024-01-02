@@ -1,7 +1,7 @@
 'use client'
 
 import { css } from '@styled-system/css'
-import type { List, Todo } from '@replicache/types'
+import type { List, Todo, TodoUpdate } from '@replicache/types'
 import { useState, type Dispatch, type SetStateAction } from 'react'
 import ItemInput from './ItemInput'
 import TodoList from './TodoList'
@@ -13,12 +13,14 @@ const MainSection = (
     itemName,
     setItemName,
     handleSubmitItem,
+    updateTodo,
   }: {
     todos: Todo[],
     itemName: string,
     setItemName: Dispatch<SetStateAction<string>>,
     handleSubmitItem: (text: string) => Promise<void>,
     selectedList: List | undefined,
+    updateTodo: (update: TodoUpdate) => void,
   },
 ) => {
   const todosCount = todos.length
@@ -65,6 +67,7 @@ const MainSection = (
     )}
       <TodoList
         todos={filteredTodos}
+        onUpdateTodo={updateTodo}
       />
   </div>
 )

@@ -7,8 +7,9 @@ import { css } from '@styled-system/css'
 import { type Mutators, getList, todosByList } from '@replicache/mutators'
 import { useState } from 'react'
 import {
-  handleDeleteList as deleteList, handleNewItem, handleNewList,
+  handleDeleteList as deleteList, handleNewItem, handleNewList, handleUpdateTodo,
 } from '@app/todoActions'
+import { TodoUpdate } from '@replicache/types'
 import Header from './Header'
 import MainSection from './MainSection'
 
@@ -60,6 +61,9 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
       )
     }
   }
+  const handleUpdateItem = async (update: TodoUpdate) => {
+    await handleUpdateTodo(rep, update)
+  }
   return (
     <div
       className={css({
@@ -82,6 +86,7 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
         itemName={itemName}
         setItemName={setItemName}
         handleSubmitItem={handleSubmitItem}
+        updateTodo={handleUpdateItem}
       />
     </div>
   )

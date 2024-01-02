@@ -72,7 +72,7 @@ const mutators = {
   updateTodo: async (tx: WriteTransaction, todoUpdate: TodoUpdate) => {
     const { id } = todoUpdate
     const previousTodo = await tx.get(`todo/${id}`) as Todo
-    const nextTodo = { ...previousTodo, todoUpdate }
+    const nextTodo = { ...previousTodo, ...todoUpdate }
     await tx.put(`todo/${id}`, nextTodo)
   },
   deleteTodo: async (tx: WriteTransaction, todoID: string) => {

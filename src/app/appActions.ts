@@ -3,7 +3,7 @@ import { item, list, share } from 'drizzle/schema'
 import {
   and, eq, inArray, or, sql,
 } from 'drizzle-orm'
-import type { List, List as ReplicacheList } from 'replicache/types'
+import type { List, List as ReplicacheList, TodoUpdate } from 'replicache/types'
 import type {
   Affected, Todo, Share, SearchResult,
 } from '@replicache/types'
@@ -383,20 +383,23 @@ function mustGetTodo(id: string): Todo {
 
 export function updateTodo(
   userID: string,
-  todoToUpdate: Todo,
+  todoToUpdate: TodoUpdate,
 ): Affected {
   const { listID } = mustGetTodo(todoToUpdate.id)
   requireAccessToList(listID, userID)
   const {
-    text, complete, sort, id,
+    text = null, complete = null, sort = null, id,
   } = todoToUpdate
+
+  const completeAsInteger = complete ? Number(complete) : null
+
   const updateItemStatementQuery = db
     .update(item)
     .set({
       title: sql<string>`coalesce(${text}, title)`,
-      complete: sql<boolean>`coalesce(${complete}, complete)`,
+      complete: sql<boolean>`coalesce(${completeAsInteger}, complete)`,
       ord: sql<number>`coalesce(${sort}, ord)`,
-      rowVersion: sql<number>`row_version + 1)`,
+      rowVersion: sql<number>`row_version + 1`,
       lastModified: new Date(),
     })
     .where(eq(item.id, id))
