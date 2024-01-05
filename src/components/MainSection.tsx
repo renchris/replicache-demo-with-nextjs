@@ -5,6 +5,7 @@ import type { List, Todo, TodoUpdate } from '@replicache/types'
 import { useState, type Dispatch, type SetStateAction } from 'react'
 import ItemInput from './ItemInput'
 import TodoList from './TodoList'
+import Footer from './Footer'
 
 const MainSection = (
   {
@@ -44,14 +45,14 @@ const MainSection = (
   })
 
   return (
-  <div
-    className={css({
-      backgroundColor: 'white',
-      boxShadow: '0 0 10px rgba(0, 0, 0, 0.25)',
-      marginTop: '12px',
-    })}
-  >
-    {selectedList ? (
+    <div
+      className={css({
+        backgroundColor: 'white',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.25)',
+        marginTop: '12px',
+      })}
+    >
+      {selectedList ? (
         <ItemInput
           itemName={itemName}
           setItemName={setItemName}
@@ -63,14 +64,22 @@ const MainSection = (
         })}
         >
           No List Selected
-      </div>
-    )}
+        </div>
+      )}
       <TodoList
         todos={filteredTodos}
         onUpdateTodo={updateTodo}
       />
-  </div>
-)
+      {selectedList && (
+      <Footer
+        completedCount={completedCount}
+        activeCount={todosCount - completedCount}
+        currentFilter={filter}
+        onFilter={setFilter}
+      />
+      )}
+    </div>
+  )
 }
 
 export default MainSection
