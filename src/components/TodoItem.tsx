@@ -3,17 +3,24 @@
 import { css } from '@styled-system/css'
 import type { Todo, TodoUpdate } from '@replicache/types'
 import ItemCheckbox from './ItemCheckbox'
+import { Button, ExitIcon } from './Button'
 
-const TodoItem = (
-  { todo, onUpdate }: { todo: Todo, onUpdate: (update: TodoUpdate) => void },
-) => {
+const TodoItem = ({
+  todo,
+  onUpdate,
+  onDelete,
+}: {
+  todo: Todo,
+  onUpdate: (update: TodoUpdate) => void,
+  onDelete: () => void,
+}) => {
   const { id } = todo
   const handleToggleComplete = () => onUpdate({ id, complete: !todo.complete })
   return (
     <div className={css({
       display: 'flex',
       flexDir: 'row',
-      paddingLeft: '24px',
+      paddingX: '24px',
       borderBottom: '1px solid #ededed',
     })}
     >
@@ -28,6 +35,19 @@ const TodoItem = (
       >
         {todo.text}
       </div>
+      <Button
+        variant="ghost"
+        marginY="auto"
+        marginLeft="auto"
+        height="20px"
+        width="20px"
+        minWidth="20px"
+        padding="2px"
+        borderRadius="2px"
+        onClick={() => onDelete()}
+      >
+        <ExitIcon />
+      </Button>
     </div>
   )
 }

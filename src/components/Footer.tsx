@@ -10,11 +10,13 @@ const Footer = ({
   activeCount,
   currentFilter,
   onFilter,
+  deleteCompleted,
 }: {
   completedCount: number,
   activeCount: number,
   currentFilter: string,
   onFilter: (filter: string) => void,
+  deleteCompleted: () => void,
 }) => (
   <footer
     className={css({
@@ -90,6 +92,7 @@ const Footer = ({
           },
         })}
         size="xs"
+        onClick={() => deleteCompleted()}
       >
         Clear Completed items
       </Button>

@@ -14,6 +14,7 @@ const MainSection = (
     itemName,
     setItemName,
     handleSubmitItem,
+    deleteTodos,
     updateTodo,
   }: {
     todos: Todo[],
@@ -21,6 +22,7 @@ const MainSection = (
     setItemName: Dispatch<SetStateAction<string>>,
     handleSubmitItem: (text: string) => Promise<void>,
     selectedList: List | undefined,
+    deleteTodos: (ids: string[]) => void,
     updateTodo: (update: TodoUpdate) => void,
   },
 ) => {
@@ -69,6 +71,7 @@ const MainSection = (
       <TodoList
         todos={filteredTodos}
         onUpdateTodo={updateTodo}
+        onDeleteTodo={(id) => deleteTodos([id])}
       />
       {selectedList && (
       <Footer
@@ -76,6 +79,7 @@ const MainSection = (
         activeCount={todosCount - completedCount}
         currentFilter={filter}
         onFilter={setFilter}
+        deleteCompleted={() => deleteTodos(completed.map((todo) => todo.id))}
       />
       )}
     </div>
