@@ -26,6 +26,7 @@ const Footer = ({
       flexDir: 'row',
       alignItems: 'center',
       padding: '10px 15px',
+      marginTop: '1px',
     })}
 
   >
