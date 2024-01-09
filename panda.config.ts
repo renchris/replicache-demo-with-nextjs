@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from '@pandacss/dev'
-import button from 'recipes/button.recipe'
+import table from 'recipes/table.recipe'
 
 export default defineConfig({
   // Whether to use css reset
@@ -9,7 +9,10 @@ export default defineConfig({
   presets: ['@pandacss/preset-base', '@park-ui/panda-preset'],
 
   // Where to look for your css declarations
-  include: ['./src/components/**/*.{ts,tsx,js,jsx}', './src/app/**/*.{ts,tsx,js,jsx}'],
+  include: [
+    './src/components/**/*.{ts,tsx,js,jsx}',
+    './src/app/**/*.{ts,tsx,js,jsx}',
+  ],
 
   // Files to exclude
   exclude: [],
@@ -17,8 +20,8 @@ export default defineConfig({
   // Useful for theme customization
   theme: {
     extend: {
-      recipes: {
-        button,
+      slotRecipes: {
+        table,
       },
     },
   },
