@@ -144,11 +144,12 @@ export async function processMutation(
     console.log('Processing mutation:', JSON.stringify(mutation))
     try {
       affected = mutate(userID, mutation)
-    } catch {
+    } catch (mutateError: unknown) {
     // TODO: You can store state here in the database to return to clients to
     // provide additional info about errors.
-      console.log('Handling error from mutation', JSON.stringify(mutation), error)
-      throw new Error(`Unknown mutation: ${mutation.name}`)
+      console.log(`Handling error from mutation "${mutation.name}":`)
+      console.log(JSON.stringify(mutation))
+      throw mutateError
     }
   }
 

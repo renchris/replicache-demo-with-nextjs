@@ -175,7 +175,7 @@ function requireAccessToList(
     .where(eq(share.userID, accessingUserID))
 
   const listRowStatementQuery = db
-    .select({ count: sql<number>`count(*)` })
+    .select({ numberOfRows: sql<number>`count(*)` })
     .from(list)
     .where(
       and(
@@ -188,9 +188,9 @@ function requireAccessToList(
     )
     .prepare()
 
-  const numberOfRows = listRowStatementQuery.all()
+  const [{ numberOfRows }] = listRowStatementQuery.all()
 
-  if (numberOfRows.length === 0) {
+  if (numberOfRows === 0) {
     throw new Error("Authorization error, can't access list")
   }
 }
