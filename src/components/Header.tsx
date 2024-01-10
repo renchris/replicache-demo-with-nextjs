@@ -1,11 +1,12 @@
 'use client'
 
 import { css } from '@styled-system/css'
-import type { List } from '@replicache/types'
+import type { List, Share } from '@replicache/types'
 import type { Dispatch, SetStateAction } from 'react'
 import { Button } from './Button'
 import NewListDialog from './NewListDialog'
 import DeleteListDialog from './DeleteListDialog'
+import ShareListDialog from './ShareListDialog'
 
 const Header = ({
   selectedList,
@@ -14,6 +15,9 @@ const Header = ({
   setListName,
   handleSubmitList,
   handleDeleteList,
+  handleSubmitCollaborator,
+  handleDeleteCollaborator,
+  guests,
 }: {
   selectedList: List | undefined,
   userID: string,
@@ -21,6 +25,9 @@ const Header = ({
   setListName: Dispatch<SetStateAction<string>>,
   handleSubmitList: () => Promise<void>,
   handleDeleteList: () => Promise<void>,
+  handleSubmitCollaborator: (sharedToUserID: string) => Promise<void>,
+  handleDeleteCollaborator: (shareID: string) => Promise<void>,
+  guests: Share[] | [],
 
 }) => (
   <header id="header">
@@ -75,9 +82,15 @@ const Header = ({
             Delete List
           </Button>
         </DeleteListDialog>
-        <Button variant="outline" disabled={!selectedList}>
-          Share
-        </Button>
+        <ShareListDialog
+          handleAddCollaborator={handleSubmitCollaborator}
+          handleDeleteCollaborator={handleDeleteCollaborator}
+          guests={guests}
+        >
+          <Button variant="outline" disabled={!selectedList}>
+            Share
+          </Button>
+        </ShareListDialog>
       </div>
     </div>
   </header>

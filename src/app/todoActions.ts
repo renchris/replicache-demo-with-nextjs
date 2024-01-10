@@ -83,3 +83,26 @@ export const handleDeleteList = async (
     router.push('/')
   }
 }
+
+export const handleNewShare = async (
+  rep: Replicache<Mutators> | null,
+  listID: string,
+  userID: string,
+) => {
+  if (rep) {
+    await rep.mutate.createShare({
+      id: nanoid(),
+      listID,
+      userID,
+    })
+  }
+}
+
+export const handleDeleteShare = async (
+  rep: Replicache<Mutators> | null,
+  shareID: string,
+) => {
+  if (rep) {
+    await rep.mutate.deleteShare(shareID)
+  }
+}

@@ -21,6 +21,19 @@ export const listLists = async (tx: ReadTransaction) => {
   return lists as List[] | []
 }
 
+export const listShares = async (tx: ReadTransaction) => {
+  const shares = await tx
+    .scan({
+      prefix: 'share/',
+      start: {
+        key: 'share/',
+      },
+    })
+    .values()
+    .toArray()
+  return shares as Share[] | []
+}
+
 const listTodos = async (tx: ReadTransaction) => {
   const todos = await tx
     .scan({

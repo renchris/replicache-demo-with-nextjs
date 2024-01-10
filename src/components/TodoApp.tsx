@@ -4,10 +4,18 @@ import { useSubscribe } from 'replicache-react'
 import { useRouter, usePathname } from 'next/navigation'
 import type { ReadTransaction, Replicache } from 'replicache'
 import { css } from '@styled-system/css'
-import { type Mutators, getList, todosByList } from '@replicache/mutators'
+import {
+  type Mutators, getList, todosByList, listShares,
+} from '@replicache/mutators'
 import { useState } from 'react'
 import {
-  handleDeleteList as deleteList, handleDeleteTodos, handleNewItem, handleNewList, handleUpdateTodo,
+  handleDeleteList as deleteList,
+  handleDeleteShare,
+  handleDeleteTodos,
+  handleNewItem,
+  handleNewList,
+  handleNewShare,
+  handleUpdateTodo,
 } from '@app/todoActions'
 import { TodoUpdate } from '@replicache/types'
 import Header from './Header'
@@ -27,6 +35,15 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
     async (tx) => todosByList(tx, listID),
     [],
     [rep, listID],
+  )
+  const guests = useSubscribe(
+    rep,
+    async (tx) => {
+      const allShares = await listShares(tx)
+      return allShares.filter((share) => share.listID === listID)
+    },
+    [],
+    [rep],
   )
   todos.sort((a, b) => a.sort - b.sort)
   const [listName, setListName] = useState('')
@@ -72,6 +89,24 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
   const handleUpdateItem = async (update: TodoUpdate) => {
     await handleUpdateTodo(rep, update)
   }
+  const handleSubmitCollaborator = async (sharedToUserID: string) => {
+    if (sharedToUserID) {
+      await handleNewShare(
+        rep,
+        listID,
+        sharedToUserID,
+      )
+    }
+  }
+
+  const handleDeleteCollaborator = async (shareID: string) => {
+    if (shareID) {
+      await handleDeleteShare(
+        rep,
+        shareID,
+      )
+    }
+  }
   return (
     <div
       className={css({
@@ -87,6 +122,9 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
         setListName={setListName}
         handleSubmitList={handleSubmitList}
         handleDeleteList={handleDeleteList}
+        handleSubmitCollaborator={handleSubmitCollaborator}
+        handleDeleteCollaborator={handleDeleteCollaborator}
+        guests={guests}
       />
       <MainSection
         todos={todos}
