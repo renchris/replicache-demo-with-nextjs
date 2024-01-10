@@ -128,7 +128,7 @@ export function searchTodosAndShares(listIDs: string[]) {
     .select({
       id: share.id,
       rowVersion: share.rowVersion,
-      type: sql<string>`'share'`,
+      type: sql<string>`'shareMeta'`,
     })
     .from(share)
     .innerJoin(list, eq(share.listID, list.id))
@@ -138,7 +138,7 @@ export function searchTodosAndShares(listIDs: string[]) {
     .select({
       id: item.id,
       rowVersion: item.rowVersion,
-      type: sql<string>`'todo'`,
+      type: sql<string>`'todoMeta'`,
     })
     .from(item)
     .where(inArray(item.listID, listIDs))
