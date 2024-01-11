@@ -37,10 +37,19 @@ const App = () => {
     }
   }, [userID])
 
+  const handleUserIDChange = (newUserID: string) => {
+    localStorage.setItem('userID', newUserID)
+    storageListener()
+  }
+
   return (
     <Layout>
       <Lists rep={rep} />
-      <TodoApp rep={rep} userID={userID} />
+      <TodoApp
+        rep={rep}
+        userID={userID}
+        handleUserIDChange={handleUserIDChange}
+      />
     </Layout>
   )
 }

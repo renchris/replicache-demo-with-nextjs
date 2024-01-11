@@ -36,7 +36,6 @@ const DeleteListDialog = ({
               <Dialog.Title>Delete the current list?</Dialog.Title>
               <Dialog.Description>
                 <Label>
-                  List:
                   {selectedListName}
                 </Label>
               </Dialog.Description>

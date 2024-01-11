@@ -25,7 +25,7 @@ const ItemEditable = ({
           <Editable.Preview />
         </Editable.Area>
         <Editable.Control className={css({
-          marginLeft: 'auto',
+          marginLeft: '8px',
         })}
         >
           {isEditing ? (

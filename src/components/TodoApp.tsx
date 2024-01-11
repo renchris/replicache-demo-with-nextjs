@@ -21,7 +21,15 @@ import { TodoUpdate } from '@replicache/types'
 import Header from './Header'
 import MainSection from './MainSection'
 
-const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: string }) => {
+const TodoApp = ({
+  rep,
+  userID,
+  handleUserIDChange,
+}: {
+  rep: Replicache<Mutators> | null,
+  userID: string,
+  handleUserIDChange: (newUserID: string) => void,
+}) => {
   const pathname = usePathname()
   const listID = pathname.split('/').pop() || ''
   const selectedList = useSubscribe(
@@ -124,6 +132,7 @@ const TodoApp = ({ rep, userID }: { rep: Replicache<Mutators> | null, userID: st
         handleDeleteList={handleDeleteList}
         handleSubmitCollaborator={handleSubmitCollaborator}
         handleDeleteCollaborator={handleDeleteCollaborator}
+        handleUserIDChange={handleUserIDChange}
         guests={guests}
       />
       <MainSection

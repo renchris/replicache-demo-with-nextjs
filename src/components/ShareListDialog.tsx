@@ -62,7 +62,6 @@ const ShareListDialog = ({
                 </div>
               </Stack>
               <Stack gap="1">
-
                 <Dialog.Title>Current Collaborators</Dialog.Title>
                 <Label>{guests.length > 0 ? 'Guests' : 'No Guests'}</Label>
                 <ShareTable
