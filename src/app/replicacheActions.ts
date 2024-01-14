@@ -6,6 +6,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import type { Replicache, WriteTransaction } from 'replicache'
 import { useSubscribe } from 'replicache-react'
 import type { Message, MessageWithID } from '@replicache/types'
+import type { Mutators } from '@replicache/mutators'
 
 export const incrementButton = async (): Promise<number> => {
   const { rep } = await getReplicache()
@@ -57,11 +58,7 @@ export const subscribeToMessages = () => {
   return messages
 }
 
-export const listen = (rep: Replicache<{
-  createMessage: (tx: WriteTransaction, {
-    id, from, content, order,
-  }: MessageWithID) => Promise<void>;
-}> | null) => {
+export const listen = (rep: Replicache<Mutators> | null) => {
   if (rep) {
     console.log('👂 listening')
     Pusher.logToConsole = true

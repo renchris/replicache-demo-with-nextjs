@@ -37,6 +37,10 @@ const App = () => {
     }
   }, [userID])
 
+  useEffect(() => {
+    listen(rep)
+  }, [])
+
   const handleUserIDChange = (newUserID: string) => {
     localStorage.setItem('userID', newUserID)
     storageListener()
