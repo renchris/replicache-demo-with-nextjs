@@ -1,45 +1,11 @@
 'use client'
 
 import Pusher from 'pusher-js'
-import { getChatReplicache, getReplicache, serverURL } from '@replicache/constructor'
-import type { Dispatch, SetStateAction } from 'react'
-import type { Replicache, WriteTransaction } from 'replicache'
+import { getChatReplicache } from '@replicache/constructor'
+import type { Replicache } from 'replicache'
 import { useSubscribe } from 'replicache-react'
-import type { Message, MessageWithID } from '@replicache/types'
+import type { Message } from '@replicache/types'
 import type { Mutators } from '@replicache/mutators'
-
-export const incrementButton = async (): Promise<number> => {
-  const { rep } = await getReplicache()
-  const ret = await rep.mutate.increment(1)
-  return ret
-}
-
-export const subscribeButton = async (
-  setCount: Dispatch<SetStateAction<number>>,
-) => {
-  const { rep } = await getReplicache()
-  rep.subscribe(async (tx) => (await tx.get('count') as number) ?? 0, {
-    onData: (count) => {
-      console.log('onData', count)
-      setCount(count)
-    },
-  })
-}
-
-export const openPokeConnection = async () => {
-  const { rep, spaceID } = await getReplicache()
-  const ev = new EventSource(
-    `${serverURL}/api/replicache/poke?spaceID=${spaceID}`,
-    {
-      withCredentials: false,
-    },
-  )
-  ev.onmessage = async (event) => {
-    if (event.data === 'poke') {
-      rep.pull()
-    }
-  }
-}
 
 export const subscribeToMessages = () => {
   const rep = getChatReplicache()
