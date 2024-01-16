@@ -1,29 +1,10 @@
 'use client'
 
 import Pusher from 'pusher-js'
-import { getChatReplicache } from '@replicache/constructor'
 import type { Replicache } from 'replicache'
-import { useSubscribe } from 'replicache-react'
-import type { Message } from '@replicache/types'
 import type { Mutators } from '@replicache/mutators'
 
-export const subscribeToMessages = () => {
-  const rep = getChatReplicache()
-  const messages = useSubscribe(
-    rep,
-    async (tx) => {
-      const list = (await tx
-        .scan({ prefix: 'message/' })
-        .entries()
-        .toArray()) as [string, Message][]
-      list.sort(([, { order: a }], [, { order: b }]) => a - b)
-      return list
-    },
-    [],
-  )
-  return messages
-}
-
+// eslint-disable-next-line import/prefer-default-export
 export const listen = (rep: Replicache<Mutators> | null) => {
   if (rep) {
     console.log('👂 listening')
