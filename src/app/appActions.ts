@@ -391,7 +391,7 @@ export function updateTodo(
     text = null, complete = null, sort = null, id,
   } = todoToUpdate
 
-  const completeAsInteger = complete ? Number(complete) : null
+  const completeAsInteger = complete !== null ? Number(complete) : null
 
   const updateItemStatementQuery = db
     .update(item)
