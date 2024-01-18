@@ -2,8 +2,7 @@
 
 import { css } from '@styled-system/css'
 import type { List, Todo, TodoUpdate } from '@replicache/types'
-import { useState, type Dispatch, type SetStateAction } from 'react'
-import ItemInput from './ItemInput'
+import { useState } from 'react'
 import TodoList from './TodoList'
 import Footer from './Footer'
 
@@ -11,19 +10,15 @@ const MainSection = (
   {
     todos,
     selectedList,
-    itemName,
-    setItemName,
-    handleSubmitItem,
     deleteTodos,
     updateTodo,
+    children,
   }: {
     todos: Todo[],
-    itemName: string,
-    setItemName: Dispatch<SetStateAction<string>>,
-    handleSubmitItem: (text: string) => Promise<void>,
     selectedList: List | undefined,
     deleteTodos: (ids: string[]) => void,
     updateTodo: (update: TodoUpdate) => void,
+    children: React.ReactNode
   },
 ) => {
   const todosCount = todos.length
@@ -54,20 +49,7 @@ const MainSection = (
         marginTop: '12px',
       })}
     >
-      {selectedList ? (
-        <ItemInput
-          itemName={itemName}
-          setItemName={setItemName}
-          handleSubmitItem={handleSubmitItem}
-        />
-      ) : (
-        <div className={css({
-          padding: '32px',
-        })}
-        >
-          No List Selected
-        </div>
-      )}
+      {children}
       <TodoList
         todos={filteredTodos}
         onUpdateTodo={updateTodo}

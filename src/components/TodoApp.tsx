@@ -12,7 +12,6 @@ import {
   handleDeleteList as deleteList,
   handleDeleteShare,
   handleDeleteTodos,
-  handleNewItem,
   handleNewList,
   handleNewShare,
   handleUpdateTodo,
@@ -25,10 +24,12 @@ const TodoApp = ({
   rep,
   userID,
   handleUserIDChange,
+  children,
 }: {
   rep: Replicache<Mutators> | null,
   userID: string,
   handleUserIDChange: (newUserID: string) => void,
+  children: React.ReactNode
 }) => {
   const pathname = usePathname()
   const listID = pathname.split('/').pop() || ''
@@ -55,7 +56,6 @@ const TodoApp = ({
   )
   todos.sort((a, b) => a.sort - b.sort)
   const [listName, setListName] = useState('')
-  const [itemName, setItemName] = useState('')
   const router = useRouter()
   const handleSubmitList = async () => {
     if (listName) {
@@ -74,15 +74,6 @@ const TodoApp = ({
         rep,
         listID,
         router,
-      )
-    }
-  }
-  const handleSubmitItem = async (text: string) => {
-    if (text) {
-      await handleNewItem(
-        rep,
-        listID,
-        text,
       )
     }
   }
@@ -138,12 +129,11 @@ const TodoApp = ({
       <MainSection
         todos={todos}
         selectedList={selectedList}
-        itemName={itemName}
-        setItemName={setItemName}
-        handleSubmitItem={handleSubmitItem}
         deleteTodos={handleDeleteItems}
         updateTodo={handleUpdateItem}
-      />
+      >
+        {children}
+      </MainSection>
     </div>
   )
 }
