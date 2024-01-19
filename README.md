@@ -7,7 +7,9 @@
   Replicache Demo With NextJS
 </h1>
 
-A NextJS App Router project that follows the Replicache Demos: Introduction and Build Your Own Back End.
+A NextJS App Router project that follows the Replicache Demos: Todo Row Versioning, Introduction, and Build Your Own Back End.
+
+Please refer to the `main` branch for the Todo Row Versioning and `build-your-own-backend` branch for the Introduction and  Build Your Own Back End Demos.
 
 ## 🥞 Stack Changes from Demos
 
@@ -159,31 +161,49 @@ A quick look at the top-level files and directories where we made our feature ch
     └── initializeDatabase.ts
     drizzle
     └── schema.ts
+    recipes
+    └── table.recipe.ts
     replicache
     ├── constructor.ts
     ├── license.ts
-    ├── space.ts
+    ├── mutators.ts
     └── types.d.ts
     src
     └── app
          ├── api
          |    ├── replicache-pull/route.ts
          |    └── replicache-push/route.ts
+         ├── list
+         |    └── [listIDSlug]
+         |          └── page.tsx
+         ├── appActions.ts
          ├── layout.tsx
          ├── page.tsx
          ├── pullActions.ts
          ├── pushActions.ts
          ├── replicacheActions.ts
-         └── components
-              ├── Chat.tsx
-              ├── IncrementCountButton.tsx
-              ├── IntroductionDemo.tsx
-              └── ReplicacheIDBName.tsx
+         ├── sharedActions.ts
+         ├── todoActions.ts
+         ├── components
+         |    ├── park-ui
+         |    |    ├── ...
+         |    |    └── ...
+         |    ├── ...
+         |    └── ...
+         └── lib
+              ├── create-replicache-context.tsx
+              └── create-style-context.tsx
+              
     drizzle.config.ts
+    panda.config.ts
 
 1. **`/db`**: This directory will contain the code related to setting up and calling our SQLite database.
 
 1. **`db/index.ts`**: This file contains our server ID and SQLite database object.
+
+1. **`recipes/`**: This directory will contain the recipe files for us to apply and override any new styles over our preset styles of our Ark UI / Park UI components
+
+1. **`recipes/table.recipe.ts`**: This file contains the Table component styles to apply and override from the Park UI Panda Preset styes.
 
 1. **`db/initializeDatabase.ts`**: This file initializes our database by inserting `server ID: 1` and `version: 1` into our replicacheServer table.
 
@@ -197,7 +217,7 @@ A quick look at the top-level files and directories where we made our feature ch
 
 1. **`replicache/license.ts`**: This file contains our tutorial license key.
 
-1. **`replicache/space.ts`**: This file creates a space to store our data on the server for our Introduction Demo.
+1. **`replicache/mutators.ts`**: This file contains the CRUD functions that interact with our local IndexedDB in-browser database.
 
 1. **`replicache/types.d.ts`**: This file contains our type definitions for our content data: Message and MessageWithID
 
@@ -209,9 +229,13 @@ A quick look at the top-level files and directories where we made our feature ch
 
 1. **`/src/app/api/replicache-push/route.ts`**: This file is our API Route Handler that processes our Pushes. It applies the latest mutations (messages submitted) and updates the latest version. It sends a poke to notify all other clients to pull for update changes.
 
+1. **`src/app/list/[listIDSlug]/page.tsx`**: This file contains the code for the list pages at the `/list/{listID}` page routes. See [NextJS Documentation: Pages](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#pages)
+
 1. **`src/app/layout.tsx`**: This file contains the Root Layout. The JSX elements in this file applies onto all routes with routes being `{children}`. See [NextJS Documentation: Layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#layouts)
 
-1. **`src/app/page.tsx`**: This file contains the code for the front-end page. See [NextJS Documentation: Pages](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#pages)
+1. **`src/app/page.tsx`**: This file contains the code for the home root front-end page. See [NextJS Documentation: Pages](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#pages)
+
+1. **`/appActions.ts`**: This file contains the CRUD functions that interact with Drizzle and our remote SQLite database.
 
 1. **`/pullActions.ts`**: This file contains the process pull helper functions.
 
@@ -219,7 +243,23 @@ A quick look at the top-level files and directories where we made our feature ch
 
 1. **`/replicacheActions.ts`**: This file contains the Replicache action helper functions and the listen for pokes function.
 
+1. **`/sharedActions.ts`**: This file contains the helper functions that relate to Client Group that are both used by process pull and process push.
+
+1. **`/todoActions.ts`**: This file contains the helper functions that wrap around the replicache mutators that are called by our Todo component.
+
+1. **`/components`**: This directory will contain all of our front-end TSX components used in our Layout and Pages.
+
+1. **`/components/park-ui`**: This directory will contain all of our Ark UI / Park UI components. See [Ark UI Documentation](https://ark-ui.com/docs/overview/introduction) and [Park UI Documentation](https://park-ui.com/docs/panda/overview/introduction)
+
+1. **`/lib`**: This directory will contain our custom Context API hooks to pass down instances of values and objects across our components.
+
+1. **`/lib/create-replicache-context.tsx`**: This file contains our Replicache Context that is used to pass down our replicache and userID instances across our page components.
+
+1. **`/lib/create-style-context.tsx`**: This file contains our Style Context that is used to create our Ark UI / Park UI components.
+
 1. **`drizzle.config.ts`**: This file configures Drizzle with the needed files and paths
+
+1. **`panda.config.ts`**: This file configures Panda for our css, file system, and JSX options. See [Panda Config Documentation](https://panda-css.com/docs/references/config)
 
 ## 📣 Recognition
 
