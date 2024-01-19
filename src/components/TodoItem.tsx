@@ -5,7 +5,7 @@ import type { Todo, TodoUpdate } from '@replicache/types'
 import { useState } from 'react'
 import type { ChangeEvent, KeyboardEvent } from 'react'
 import ItemCheckbox from './ItemCheckbox'
-import { Button, ExitIcon } from './Button'
+import { Button, ExitIcon } from './park-ui/Button'
 import ItemEditable from './ItemEditable'
 
 const TodoItem = ({

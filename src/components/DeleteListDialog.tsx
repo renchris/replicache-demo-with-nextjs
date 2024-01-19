@@ -2,10 +2,10 @@ import { Portal } from '@ark-ui/react'
 import { Stack } from 'styled-system/jsx'
 import { useRef } from 'react'
 import type { KeyboardEvent } from 'react'
-import { Button } from './Button'
-import type { DialogProps } from './Dialog'
-import * as Dialog from './Dialog'
-import { Label } from './Label'
+import { Button } from './park-ui/Button'
+import type { DialogProps } from './park-ui/Dialog'
+import * as Dialog from './park-ui/Dialog'
+import { Label } from './park-ui/Label'
 
 const DeleteListDialog = ({
   handleDeleteList,

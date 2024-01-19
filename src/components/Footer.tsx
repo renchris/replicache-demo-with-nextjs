@@ -1,7 +1,7 @@
 'use client'
 
 import { css } from '@styled-system/css'
-import { Button } from './Button'
+import { Button } from './park-ui/Button'
 
 const FILTER_TITLES = ['All', 'Active', 'Completed']
 

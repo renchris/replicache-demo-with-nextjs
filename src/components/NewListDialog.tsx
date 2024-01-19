@@ -1,11 +1,11 @@
 import { Portal } from '@ark-ui/react'
 import { Stack } from 'styled-system/jsx'
 import type { Dispatch, SetStateAction, KeyboardEvent } from 'react'
-import { Button } from './Button'
-import { Input } from './Input'
-import { Label } from './Label'
-import type { DialogProps } from './Dialog'
-import * as Dialog from './Dialog'
+import { Button } from './park-ui/Button'
+import { Input } from './park-ui/Input'
+import { Label } from './park-ui/Label'
+import type { DialogProps } from './park-ui/Dialog'
+import * as Dialog from './park-ui/Dialog'
 
 const NewListDialog = ({
   listName,

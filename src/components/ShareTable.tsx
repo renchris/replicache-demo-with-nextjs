@@ -1,7 +1,7 @@
 import { Share } from '@replicache/types'
-import { Button, ExitIcon } from './Button'
-import type { TableProps } from './Table'
-import * as Table from './Table'
+import { Button, ExitIcon } from './park-ui/Button'
+import type { TableProps } from './park-ui/Table'
+import * as Table from './park-ui/Table'
 
 const ShareTable = ({
   guests,

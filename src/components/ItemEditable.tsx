@@ -1,7 +1,7 @@
 import { css } from '@styled-system/css'
-import { Button } from './Button'
-import type { EditableProps } from './Editable'
-import * as Editable from './Editable'
+import { Button } from './park-ui/Button'
+import type { EditableProps } from './park-ui/Editable'
+import * as Editable from './park-ui/Editable'
 
 const ItemEditable = ({
   isEditing,

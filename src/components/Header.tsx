@@ -6,7 +6,7 @@ import type {
   Dispatch, SetStateAction, ChangeEvent, KeyboardEvent,
 } from 'react'
 import { useState, useEffect } from 'react'
-import { Button } from './Button'
+import { Button } from './park-ui/Button'
 import NewListDialog from './NewListDialog'
 import DeleteListDialog from './DeleteListDialog'
 import ShareListDialog from './ShareListDialog'

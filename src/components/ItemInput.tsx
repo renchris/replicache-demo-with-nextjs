@@ -2,7 +2,7 @@
 
 import type { KeyboardEvent, Dispatch, SetStateAction } from 'react'
 import { css } from '@styled-system/css'
-import { Input } from './Input'
+import { Input } from './park-ui/Input'
 
 const ItemInput = ({
   itemName,
