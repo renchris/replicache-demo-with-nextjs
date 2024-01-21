@@ -36,14 +36,12 @@ const TodoApp = ({
   const selectedList = useSubscribe(
     rep,
     (tx: ReadTransaction) => getList(tx, listID),
-    undefined,
-    [rep, listID],
+    { default: undefined, dependencies: [listID] },
   )
   const todos = useSubscribe(
     rep,
     async (tx) => todosByList(tx, listID),
-    [],
-    [rep, listID],
+    { default: [], dependencies: [listID] },
   )
   const guests = useSubscribe(
     rep,
@@ -51,8 +49,7 @@ const TodoApp = ({
       const allShares = await listShares(tx)
       return allShares.filter((share) => share.listID === listID)
     },
-    [],
-    [rep],
+    { default: [] },
   )
   todos.sort((a, b) => a.sort - b.sort)
   const [listName, setListName] = useState('')

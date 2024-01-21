@@ -65,13 +65,13 @@ export type Mutators = {
 
 const mutators = {
   createList: async (tx: WriteTransaction, list: List) => {
-    await tx.put(`list/${list.id}`, list)
+    await tx.set(`list/${list.id}`, list)
   },
   deleteList: async (tx: WriteTransaction, listID: string) => {
     await tx.del(`list/${listID}`)
   },
   createShare: async (tx: WriteTransaction, share: Share) => {
-    await tx.put(`share/${share.id}`, share)
+    await tx.set(`share/${share.id}`, share)
   },
   deleteShare: async (tx: WriteTransaction, shareID: string) => {
     await tx.del(`share/${shareID}`)
@@ -80,13 +80,13 @@ const mutators = {
     const todos = await listTodos(tx)
     todos.sort((t1, t2) => t1.sort - t2.sort)
     const maxSort = todos.pop()?.sort ?? 0
-    await tx.put(`todo/${todo.id}`, { ...todo, sort: maxSort + 1 })
+    await tx.set(`todo/${todo.id}`, { ...todo, sort: maxSort + 1 })
   },
   updateTodo: async (tx: WriteTransaction, todoUpdate: TodoUpdate) => {
     const { id } = todoUpdate
     const previousTodo = await tx.get(`todo/${id}`) as Todo
     const nextTodo = { ...previousTodo, ...todoUpdate }
-    await tx.put(`todo/${id}`, nextTodo)
+    await tx.set(`todo/${id}`, nextTodo)
   },
   deleteTodo: async (tx: WriteTransaction, todoID: string) => {
     await tx.del(`todo/${todoID}`)

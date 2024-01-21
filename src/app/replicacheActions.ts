@@ -17,9 +17,13 @@ export const listen = (rep: Replicache<Mutators> | null) => {
       enabledTransports: ['ws', 'wss'],
     })
     const channel = pusher.subscribe('default-channel')
-    channel.bind('poke-event', () => {
+    channel.bind('poke-event', async () => {
       console.log('🫰 got poked')
-      rep.pull()
+      try {
+        await rep.pull()
+      } catch (error) {
+        console.log('rep.pull() failed')
+      }
     })
   }
 }

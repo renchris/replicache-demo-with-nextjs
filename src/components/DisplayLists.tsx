@@ -7,7 +7,7 @@ import type { Replicache } from 'replicache'
 import { css } from '@styled-system/css'
 
 const DisplayLists = ({ rep }: { rep: Replicache<Mutators> | null }) => {
-  const lists = useSubscribe(rep, listLists, [], [rep])
+  const lists = useSubscribe(rep, listLists, { default: [] })
   return (
     <div>
       {lists.map((list) => (
