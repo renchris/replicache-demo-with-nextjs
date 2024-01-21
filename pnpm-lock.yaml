@@ -51,11 +51,11 @@ dependencies:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
   replicache:
-    specifier: ^13.0.1
-    version: 13.0.1
+    specifier: ^14.0.3
+    version: 14.0.3
   replicache-react:
-    specifier: ^3.1.0
-    version: 3.1.0(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^5.0.1
+    version: 5.0.1(react-dom@18.2.0)(react@18.2.0)
   typescript:
     specifier: 5.3.3
     version: 5.3.3
@@ -549,6 +549,11 @@ packages:
       '@babel/helper-string-parser': 7.23.4
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
+
+  /@badrap/valita@0.3.0:
+    resolution: {integrity: sha512-bvsH70aYKOdB3rXVZXhJgGpHqxt+TcVperVvXCo9Dotpj9u0jBgQP5jgPmZNbIz0FyTvMP/oPUzqn6WS2L0l3w==}
+    engines: {node: '>= 16'}
+    dev: false
 
   /@clack/core@0.3.3:
     resolution: {integrity: sha512-5ZGyb75BUBjlll6eOa1m/IZBxwk91dooBWhPSL67sWcLS0zt9SnswRL0l26TVdBhb0wnWORRxUn//uH6n4z7+A==}
@@ -7218,8 +7223,8 @@ packages:
       unist-util-visit: 5.0.0
     dev: true
 
-  /replicache-react@3.1.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-sK9IpxY2Zqv5IMkD5H7DijSAYNFNG149gHnZiqQCXQLjT7ygZRpiBVUdLQAbxZ/Fhz3CD+FuuJseEZIgi6owmg==}
+  /replicache-react@5.0.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-xwiVdoANIX9oagqK8sT/txx9ltfEmkKgbJivdVvyz13bj5PAT+b8o9xuMtY4X1bJgu+9mn04muWPKtPv9MV/ZA==}
     peerDependencies:
       react: '>=16.0 <19.0'
       react-dom: '>=16.0 <19.0'
@@ -7228,11 +7233,12 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /replicache@13.0.1:
-    resolution: {integrity: sha512-dgGHxpCubx2woDyXsh6AeqZ3KwU0IEqyXU6IZ13f6YAH+Ik5P969CxsnTmxZmPdX7WQseZ4jQotCkWLeJlEeJg==}
+  /replicache@14.0.3:
+    resolution: {integrity: sha512-BXj8Wg2LS15h+3H66ws5XDHlNT88mLjqEkvxhecg4OaqnfNMBJRr5/gM9Chu4gVciH5w90G1X6JTsshgvW2FBg==}
     engines: {node: '>=14.8.0'}
     hasBin: true
     dependencies:
+      '@badrap/valita': 0.3.0
       '@rocicorp/lock': 1.0.3
       '@rocicorp/logger': 5.2.1
       '@rocicorp/resolver': 1.0.1
