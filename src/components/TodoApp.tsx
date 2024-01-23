@@ -40,16 +40,16 @@ const TodoApp = ({
   )
   const todos = useSubscribe(
     rep,
-    async (tx) => todosByList(tx, listID),
+    async (tx: ReadTransaction) => todosByList(tx, listID),
     { default: [], dependencies: [listID] },
   )
   const guests = useSubscribe(
     rep,
-    async (tx) => {
+    async (tx: ReadTransaction) => {
       const allShares = await listShares(tx)
       return allShares.filter((share) => share.listID === listID)
     },
-    { default: [] },
+    { default: [], dependencies: [listID] },
   )
   todos.sort((a, b) => a.sort - b.sort)
   const [listName, setListName] = useState('')
