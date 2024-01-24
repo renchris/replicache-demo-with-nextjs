@@ -30,7 +30,7 @@ const ShareListDialog = ({
       </Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
-        <Dialog.Positioner top="50dvh" height="0px">
+        <Dialog.Positioner>
           <Dialog.Content>
             <Stack
               gap="8"
@@ -41,7 +41,7 @@ const ShareListDialog = ({
               <Stack gap="1">
                 <Dialog.Title>Add Collaborator</Dialog.Title>
                 <Dialog.Description>
-                  <Label>Guest ID</Label>
+                  <Label color="#202020" fontWeight="medium">Guest ID</Label>
                 </Dialog.Description>
                 <div className={css({
                   display: 'flex',
@@ -63,7 +63,7 @@ const ShareListDialog = ({
               </Stack>
               <Stack gap="1">
                 <Dialog.Title>Current Collaborators</Dialog.Title>
-                <Label>{guests.length > 0 ? 'Guests' : 'No Guests'}</Label>
+                <Label color="#202020" fontWeight="medium">{guests.length > 0 ? 'Guests' : 'No Guests'}</Label>
                 <ShareTable
                   guests={guests}
                   handleDeleteCollaborator={handleDeleteCollaborator}

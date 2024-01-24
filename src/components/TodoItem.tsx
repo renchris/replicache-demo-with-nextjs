@@ -4,7 +4,7 @@ import { css } from '@styled-system/css'
 import type { Todo, TodoUpdate } from '@replicache/types'
 import { useState } from 'react'
 import type { ChangeEvent, KeyboardEvent } from 'react'
-import ItemCheckbox from './ItemCheckbox'
+import { Checkbox } from './park-ui/Checkbox'
 import { Button, ExitIcon } from './park-ui/Button'
 import ItemEditable from './ItemEditable'
 
@@ -53,7 +53,7 @@ const TodoItem = ({
       borderBottom: isEditing ? '1px solid #b83f45' : '1px solid #ededed',
     })}
     >
-      <ItemCheckbox checked={todo.complete} onChange={handleToggleComplete} />
+      <Checkbox checked={todo.complete} onChange={handleToggleComplete} />
       <div
         className={css({
           padding: '15px 15px 15px 24px',

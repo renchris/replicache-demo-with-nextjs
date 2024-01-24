@@ -31,13 +31,13 @@ const NewListDialog = ({
       </Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
-        <Dialog.Positioner top="50dvh" height="0px">
+        <Dialog.Positioner>
           <Dialog.Content>
             <Stack gap="8" p="6">
               <Stack gap="1">
                 <Dialog.Title>List</Dialog.Title>
                 <Dialog.Description>
-                  <Label htmlFor="name">Name</Label>
+                  <Label color="#202020" fontWeight="medium" htmlFor="name">Name</Label>
                 </Dialog.Description>
                 <Input
                   id="name"
