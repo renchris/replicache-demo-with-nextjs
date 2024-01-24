@@ -65,20 +65,22 @@ const TodoApp = ({
     }
     setListName('')
   }
-  const handleDeleteList = async () => {
-    if (listID) {
-      await deleteList(
-        rep,
-        listID,
-        router,
-      )
-    }
-  }
   const handleDeleteItems = async (ids: string[]) => {
     if (ids) {
       await handleDeleteTodos(
         rep,
         ids,
+      )
+    }
+  }
+  const handleDeleteList = async () => {
+    if (listID) {
+      const todoIDs = todos.map((todo) => todo.id)
+      await deleteList(
+        rep,
+        listID,
+        todoIDs,
+        router,
       )
     }
   }
