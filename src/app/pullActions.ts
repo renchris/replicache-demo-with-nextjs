@@ -9,7 +9,7 @@ import type {
 import {
   replicacheClient,
 } from 'drizzle/schema'
-import db from 'db'
+import db from 'drizzle/db'
 import type {
   Cookie, ClientRecord, ClientViewRecord, List, SearchResult, Share, Todo,
 } from '@replicache/types'

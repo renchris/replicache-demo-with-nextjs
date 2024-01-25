@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "panda codegen",
     "generate": "drizzle-kit generate:sqlite",
-    "push": "drizzle-kit push:sqlite && npx tsx ./db/initializeDatabase.ts",
+    "push": "drizzle-kit push:sqlite && npx tsx ./drizzle/initializeDatabase.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

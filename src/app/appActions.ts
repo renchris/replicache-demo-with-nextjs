@@ -1,4 +1,4 @@
-import db from 'db'
+import db from 'drizzle/db'
 import { item, list, share } from 'drizzle/schema'
 import {
   and, eq, inArray, or, sql,

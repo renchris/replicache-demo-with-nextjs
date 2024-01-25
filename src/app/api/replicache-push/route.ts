@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { MutationV1, PushRequestV1 } from 'replicache'
-import db from 'db'
+import db from 'drizzle/db'
 import { processMutation, sendPoke } from '@app/pushActions'
 
 // eslint-disable-next-line import/prefer-default-export

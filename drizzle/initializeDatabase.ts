@@ -1,5 +1,5 @@
-import { replicacheMeta } from '../drizzle/schema'
-import db from './index'
+import { replicacheMeta } from './schema'
+import db from './db'
 
 // consider default values https://orm.drizzle.team/docs/indexes-constraints#default
 

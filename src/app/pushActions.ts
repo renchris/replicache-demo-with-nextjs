@@ -9,7 +9,7 @@ import type {
 import {
   replicacheClient,
 } from 'drizzle/schema'
-import db from 'db'
+import db from 'drizzle/db'
 import { getClientGroupForUpdate, putClientGroup } from './sharedActions'
 import {
   createList, createShare, createTodo, deleteList, deleteShare, deleteTodo, updateTodo,

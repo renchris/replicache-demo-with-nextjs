@@ -3,7 +3,7 @@ import {
   replicacheClientGroup,
 } from 'drizzle/schema'
 import { eq } from 'drizzle-orm'
-import db from 'db'
+import db from 'drizzle/db'
 
 export function putClientGroup(
   clientGroup: ClientGroupRecord,
