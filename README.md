@@ -156,10 +156,9 @@ See
 
 A quick look at the top-level files and directories where we made our feature changes in the project.
 
-    db
-    ├── index.ts
-    └── initializeDatabase.ts
     drizzle
+    ├── db.ts
+    ├── initializeDatabase.ts
     └── schema.ts
     recipes
     └── table.recipe.ts
@@ -197,19 +196,17 @@ A quick look at the top-level files and directories where we made our feature ch
     drizzle.config.ts
     panda.config.ts
 
-1. **`/db`**: This directory will contain the code related to setting up and calling our SQLite database.
+1. **`/drizzle`**: This directory will contain the code related to setting up and calling our SQLite database with Drizzle.
 
-1. **`db/index.ts`**: This file contains our server ID and SQLite database object.
+1. **`drizzle/db.ts`**: This file contains our server ID and SQLite database object.
+
+1. **`db/initializeDatabase.ts`**: This file initializes our database by inserting `server ID: 1` and `version: 1` into our replicacheServer table.
+
+1. **`drizzle/schema.ts`**: This file contains our Drizzle schema that declares our table fields and the typescript type definitions of our tables.
 
 1. **`recipes/`**: This directory will contain the recipe files for us to apply and override any new styles over our preset styles of our Ark UI / Park UI components
 
 1. **`recipes/table.recipe.ts`**: This file contains the Table component styles to apply and override from the Park UI Panda Preset styes.
-
-1. **`db/initializeDatabase.ts`**: This file initializes our database by inserting `server ID: 1` and `version: 1` into our replicacheServer table.
-
-1. **`/drizzle`**: This directory will contain the code related to Drizzle.
-
-1. **`drizzle/schema.ts`**: This file contains our Drizzle schema that declares our table fields and the typescript type definitions of our tables.
 
 1. **`/replicache`**: This directory will contain the code related to Replicache.
 
