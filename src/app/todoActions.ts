@@ -1,11 +1,11 @@
 // Define event handlers and connect them to Replicache mutators. Each
 // of these mutators runs immediately (optimistically) locally, then runs
 
-import { Mutators } from '@replicache/mutators'
-import { TodoUpdate } from '@replicache/types'
+import type { Mutators } from '@replicache/mutators'
+import type { TodoUpdate } from '@replicache/types'
 import { nanoid } from 'nanoid'
-import { Replicache } from 'replicache'
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+import type { Replicache } from 'replicache'
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
 // again on the server-side automatically.
 export const handleNewItem = (
