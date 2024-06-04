@@ -1,3 +1,5 @@
+'use server'
+
 import type { ClientGroupRecord } from '@replicache/types'
 import {
   replicacheClientGroup,
@@ -5,9 +7,9 @@ import {
 import { eq } from 'drizzle-orm'
 import db from 'drizzle/db'
 
-export function putClientGroup(
+export async function putClientGroup(
   clientGroup: ClientGroupRecord,
-) {
+): Promise<void> {
   const { id, cvrVersion, clientGroupVersion } = clientGroup
   const insertClientGroupStatementQuery = db
     .insert(replicacheClientGroup)
@@ -50,9 +52,9 @@ function getClientGroup(
   return clientGroupRow
 }
 
-export function getClientGroupForUpdate(
+export async function getClientGroupForUpdate(
   clientGroupID: string,
-): ClientGroupRecord {
+): Promise<ClientGroupRecord> {
   const previousClientGroup = getClientGroup(clientGroupID)
   return {
     id: clientGroupID,

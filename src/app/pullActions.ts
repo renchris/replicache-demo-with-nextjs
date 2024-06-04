@@ -95,7 +95,7 @@ async function pullForChanges(
     shares: Share[];
     todos: Todo[];
   }> {
-  const baseClientGroupRecord = getClientGroupForUpdate(clientGroupID)
+  const baseClientGroupRecord = await getClientGroupForUpdate(clientGroupID)
   const clientChanges = searchClients(clientGroupID, baseCVR.clientVersion)
   const listMeta = await searchLists(userID)
 
@@ -138,7 +138,7 @@ async function pullForChanges(
   const lists = await getLists(listPuts)
   const shares = await getShares(sharePuts)
   const todos = await getTodos(todoPuts)
-  putClientGroup(nextClientGroupRecord)
+  await putClientGroup(nextClientGroupRecord)
 
   return {
     nextCVRVersion: nextClientGroupRecord.cvrVersion,

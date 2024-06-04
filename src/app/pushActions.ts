@@ -116,7 +116,7 @@ export async function processMutation(
     JSON.stringify(mutation, null, ''),
   )
 
-  const baseClientGroup = getClientGroupForUpdate(clientGroupID)
+  const baseClientGroup = await getClientGroupForUpdate(clientGroupID)
   const baseClient = getClientForUpdate(mutation.clientID)
 
   console.log('baseClientGroup', { baseClientGroup }, 'baseClient', { baseClient })
@@ -166,7 +166,7 @@ export async function processMutation(
     clientVersion: nextClientVersion,
   }
 
-  putClientGroup(nextClientGroup)
+  await putClientGroup(nextClientGroup)
   putClient(nextClient)
 
   return { affected }
