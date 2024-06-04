@@ -1,3 +1,5 @@
+'use server'
+
 import db from 'drizzle/db'
 import { item, list, share } from 'drizzle/schema'
 import {
@@ -9,10 +11,10 @@ import type {
 } from '@replicache/types'
 import { union, unionAll } from 'drizzle-orm/sqlite-core'
 
-export function getPutsSince(
+export async function getPutsSince(
   nextData: Map<string, number>,
   prevData: Map<string, number>,
-): string[] {
+): Promise<string[]> {
   const puts: string[] = []
   nextData.forEach((rowVersion, id) => {
     const prev = prevData.get(id)
@@ -23,10 +25,10 @@ export function getPutsSince(
   return puts
 }
 
-export function getDelsSince(
+export async function getDelsSince(
   nextData: Map<string, number>,
   prevData: Map<string, number>,
-): string[] {
+): Promise<string[]> {
   const dels: string[] = []
   prevData.forEach((_, id) => {
     if (!nextData.has(id)) {
@@ -36,7 +38,7 @@ export function getDelsSince(
   return dels
 }
 
-export function getLists(listIDs: string[]) {
+export async function getLists(listIDs: string[]): Promise<List[]> {
   if (listIDs.length === 0) return []
   const listStatemenetQuery = db
     .select({
@@ -60,18 +62,10 @@ export function getLists(listIDs: string[]) {
   return lists
 }
 
-export type ListAndID = {
-  id: string,
-  name: string;
-  ownerID: string;
-  rowVersion: number;
-  lastModified: number;
-}
-
-export function createList(
+export async function createList(
   userID: string,
   listToInsert: ReplicacheList,
-) {
+): Promise<{ listIDs: [], userIDs: string[] }> {
   if (userID !== listToInsert.ownerID) {
     throw new Error('Authorization error, cannot create list for other user')
   }
@@ -92,9 +86,9 @@ export function createList(
   return { listIDs: [], userIDs: [ownerID] }
 }
 
-export function searchLists(
+export async function searchLists(
   accessibleByUserID: string,
-): SearchResult[] {
+): Promise<SearchResult[]> {
   const shareRowStatementSubquery = db
     .select({
       id: share.listID,
@@ -121,7 +115,16 @@ export function searchLists(
   return listRows
 }
 
-export function searchTodosAndShares(listIDs: string[]) {
+export async function searchTodosAndShares(listIDs: string[]): Promise<{
+  shareMeta: {
+    id: string;
+    rowVersion: number;
+  }[];
+  todoMeta: {
+    id: string;
+    rowVersion: number;
+  }[];
+}> {
   if (listIDs.length === 0) return { shareMeta: [], todoMeta: [] }
 
   const shareStatementQuery = db
@@ -213,10 +216,10 @@ function getAccessors(listID: string) {
   return userIdRows.map((row: { userID: string }) => row.userID)
 }
 
-export function deleteList(
+export async function deleteList(
   userID: string,
   listID: string,
-): Affected {
+): Promise<Affected> {
   requireAccessToList(listID, userID)
   const userIDs = getAccessors(listID)
   const deleteListStatementQuery = db
@@ -232,10 +235,13 @@ export function deleteList(
   }
 }
 
-export function createTodo(
+export async function createTodo(
   userID: string,
   todo: Omit<Todo, 'sort'>,
-) {
+): Promise<{
+    listIDs: string[];
+    userIDs: [];
+  }> {
   requireAccessToList(todo.listID, userID)
   const maxOrdRowStatementQuery = db
     .select({ maxOrd: sql<number>`max(${item.ord})` })
@@ -267,10 +273,13 @@ export function createTodo(
   return { listIDs: [todo.listID], userIDs: [] }
 }
 
-export function createShare(
+export async function createShare(
   userIDForAccess: string,
   shareToInsert: Share,
-) {
+): Promise<{
+    listIDs: string[];
+    userIDs: string[];
+  }> {
   requireAccessToList(shareToInsert.listID, userIDForAccess)
   const { id, listID, userID } = shareToInsert
   const insertShareStatementQuery = db
@@ -292,7 +301,7 @@ export function createShare(
   }
 }
 
-export function getShares(shareIDs: string[]) {
+export async function getShares(shareIDs: string[]): Promise<Share[]> {
   if (shareIDs.length === 0) return []
 
   const shareRowStatementQuery = db
@@ -318,11 +327,11 @@ export function getShares(shareIDs: string[]) {
   return shares
 }
 
-export function deleteShare(
+export async function deleteShare(
   userIDForAccess: string,
   id: string,
-): Affected {
-  const [shareToDelete] = getShares([id])
+): Promise<Affected> {
+  const [shareToDelete] = await getShares([id])
   if (!shareToDelete) {
     throw new Error("Specified share doesn't exist")
   }
@@ -343,7 +352,7 @@ export function deleteShare(
   }
 }
 
-export function getTodos(todoIDs: string[]) {
+export async function getTodos(todoIDs: string[]): Promise<Todo[]> {
   if (todoIDs.length === 0) return []
   const todoRowStatementQuery = db
     .select({
@@ -373,19 +382,19 @@ export function getTodos(todoIDs: string[]) {
   return todos
 }
 
-function mustGetTodo(id: string): Todo {
-  const [todo] = getTodos([id])
+async function mustGetTodo(id: string): Promise<Todo> {
+  const [todo] = await getTodos([id])
   if (!todo) {
     throw new Error('Specified todo does not exist')
   }
   return todo
 }
 
-export function updateTodo(
+export async function updateTodo(
   userID: string,
   todoToUpdate: TodoUpdate,
-): Affected {
-  const { listID } = mustGetTodo(todoToUpdate.id)
+): Promise<Affected> {
+  const { listID } = await mustGetTodo(todoToUpdate.id)
   requireAccessToList(listID, userID)
   const {
     text = null, complete = null, sort = null, id,
@@ -413,11 +422,11 @@ export function updateTodo(
   }
 }
 
-export function deleteTodo(
+export async function deleteTodo(
   userID: string,
   todoID: string,
-): Affected {
-  const { listID } = mustGetTodo(todoID)
+): Promise<Affected> {
+  const { listID } = await mustGetTodo(todoID)
   requireAccessToList(listID, userID)
   const deleteTodoStatementQuery = db
     .delete(item)

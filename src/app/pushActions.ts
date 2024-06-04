@@ -49,10 +49,10 @@ function getClientForUpdate(
   }
 }
 
-function mutate(
+async function mutate(
   userID: string,
   mutation: MutationV1,
-): Affected {
+): Promise<Affected> {
   switch (mutation.name) {
     case 'createList':
       return createList(userID, mutation.args as ReplicacheList)
@@ -69,10 +69,10 @@ function mutate(
     case 'deleteTodo':
       return deleteTodo(userID, mutation.args as string)
     default:
-      return {
+      return Promise.resolve({
         listIDs: [],
         userIDs: [],
-      }
+      })
   }
 }
 
@@ -143,7 +143,7 @@ export async function processMutation(
   if (error === undefined) {
     console.log('Processing mutation:', JSON.stringify(mutation))
     try {
-      affected = mutate(userID, mutation)
+      affected = await mutate(userID, mutation)
     } catch (mutateError: unknown) {
     // TODO: You can store state here in the database to return to clients to
     // provide additional info about errors.

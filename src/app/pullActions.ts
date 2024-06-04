@@ -82,26 +82,26 @@ function fromSearchResult(result: SearchResult[]): Map<string, number> {
   return data
 }
 
-function pullForChanges(
+async function pullForChanges(
   clientGroupID: string,
   baseCVR: ClientViewRecord,
   userID: string,
   cookie: Cookie,
-): {
+): Promise<{
     nextCVRVersion: number;
     nextCVR: ClientViewRecord;
     clientChanges: ClientRecord[];
     lists: List[];
     shares: Share[];
     todos: Todo[];
-  } {
+  }> {
   const baseClientGroupRecord = getClientGroupForUpdate(clientGroupID)
   const clientChanges = searchClients(clientGroupID, baseCVR.clientVersion)
-  const listMeta = searchLists(userID)
+  const listMeta = await searchLists(userID)
 
   const listIDs = listMeta.map((listRow) => listRow.id)
 
-  const { shareMeta, todoMeta } = searchTodosAndShares(listIDs)
+  const { shareMeta, todoMeta } = await searchTodosAndShares(listIDs)
 
   const nextCVR: ClientViewRecord = {
     list: fromSearchResult(listMeta),
@@ -110,9 +110,9 @@ function pullForChanges(
     clientVersion: baseClientGroupRecord.clientGroupVersion,
   }
 
-  const listPuts = getPutsSince(nextCVR.list, baseCVR.list)
-  const sharePuts = getPutsSince(nextCVR.share, baseCVR.share)
-  const todoPuts = getPutsSince(nextCVR.todo, baseCVR.todo)
+  const listPuts = await getPutsSince(nextCVR.list, baseCVR.list)
+  const sharePuts = await getPutsSince(nextCVR.share, baseCVR.share)
+  const todoPuts = await getPutsSince(nextCVR.todo, baseCVR.todo)
 
   let previousCVRVersion = baseClientGroupRecord.cvrVersion
   if (previousCVRVersion === null) {
@@ -135,9 +135,9 @@ function pullForChanges(
     listPuts, sharePuts, todoPuts, nextClientGroupRecord,
   })
 
-  const lists = getLists(listPuts)
-  const shares = getShares(sharePuts)
-  const todos = getTodos(todoPuts)
+  const lists = await getLists(listPuts)
+  const shares = await getShares(sharePuts)
+  const todos = await getTodos(todoPuts)
   putClientGroup(nextClientGroupRecord)
 
   return {
@@ -192,10 +192,10 @@ function getPatch(
   return patch
 }
 
-function processPull(
+async function processPull(
   pull: PullRequestV1,
   userID: string,
-): PullResponseV1 {
+): Promise<PullResponseV1> {
   const { clientGroupID, cookie } = pull
   const replicacheCookie = cookie as Cookie
   const { previousCVR, baseCVR } = getBaseCVR(clientGroupID, replicacheCookie)
@@ -207,16 +207,16 @@ function processPull(
     lists,
     shares,
     todos,
-  } = db.transaction(() => pullForChanges(
+  } = await db.transaction(async () => pullForChanges(
     clientGroupID,
     baseCVR,
     userID,
     replicacheCookie,
   ))
 
-  const listDels = getDelsSince(nextCVR.list, baseCVR.list)
-  const shareDels = getDelsSince(nextCVR.share, baseCVR.share)
-  const todoDels = getDelsSince(nextCVR.todo, baseCVR.todo)
+  const listDels = await getDelsSince(nextCVR.list, baseCVR.list)
+  const shareDels = await getDelsSince(nextCVR.share, baseCVR.share)
+  const todoDels = await getDelsSince(nextCVR.todo, baseCVR.todo)
 
   console.log({ listDels, shareDels, todoDels })
 
