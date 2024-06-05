@@ -17,11 +17,11 @@ export async function POST(request: NextRequest) {
     console.log('Processing push', JSON.stringify(push))
     t0 = Date.now()
 
-    push.mutations.forEach(async (mutation: MutationV1) => {
+    push.mutations.reduce(async (_, mutation: MutationV1) => {
       const t1 = Date.now()
       try {
         const result = await db.transaction(
-          () => processMutation(push.clientGroupID, userID, mutation),
+          async () => processMutation(push.clientGroupID, userID, mutation),
         )
         result.affected.listIDs.forEach((affectedListID) => {
           affected.listIDs.add(affectedListID)
@@ -33,11 +33,13 @@ export async function POST(request: NextRequest) {
         console.log(error)
         if (error instanceof Error) {
           const errorMessage = error.message
-          db.transaction(() => processMutation(push.clientGroupID, userID, mutation, errorMessage))
+          await db.transaction(
+            async () => processMutation(push.clientGroupID, userID, mutation, errorMessage),
+          )
         }
       }
       console.log('Processed mutation in', Date.now() - t1)
-    })
+    }, Promise.resolve())
     await sendPoke()
     const response = NextResponse.json({})
     return response
