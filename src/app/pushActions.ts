@@ -112,7 +112,7 @@ export async function processMutation(
 ) {
   let affected: Affected = { listIDs: [], userIDs: [] }
   console.log(
-    error === null ? 'Processing mutation' : 'Processing mutation error',
+    error === undefined ? 'Processing mutation' : 'Processing mutation error',
     JSON.stringify(mutation, null, ''),
   )
 
