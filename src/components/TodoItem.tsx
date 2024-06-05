@@ -2,7 +2,7 @@
 
 import { css } from '@styled-system/css'
 import type { Todo, TodoUpdate } from '@replicache/types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { Checkbox } from './park-ui/Checkbox'
 import { Button, ExitIcon } from './park-ui/Button'
@@ -32,6 +32,12 @@ const TodoItem = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value)
   }
+
+  useEffect(() => {
+    if (!isEditing) {
+      setTextInput(todo.text)
+    }
+  }, [todo])
 
   return (
     <div className={css({
