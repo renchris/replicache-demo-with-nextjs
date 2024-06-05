@@ -3,7 +3,7 @@
 import { css } from '@styled-system/css'
 import type { Todo, TodoUpdate } from '@replicache/types'
 import { useState } from 'react'
-import type { ChangeEvent, KeyboardEvent } from 'react'
+import type { ChangeEvent } from 'react'
 import { Checkbox } from './park-ui/Checkbox'
 import { Button, ExitIcon } from './park-ui/Button'
 import ItemEditable from './ItemEditable'
@@ -33,15 +33,6 @@ const TodoItem = ({
     setTextInput(e.target.value)
   }
 
-  const handleSubmit = () => {
-    handleSave(textInput)
-  }
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter') {
-      handleSubmit()
-    }
-  }
   return (
     <div className={css({
       display: 'flex',
@@ -75,7 +66,6 @@ const TodoItem = ({
             setIsEditing(false)
           }}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
           value={textInput}
           submitMode="enter"
 
