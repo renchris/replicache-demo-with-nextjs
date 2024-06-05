@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "prepare": "panda codegen",
-    "generate": "drizzle-kit generate:sqlite",
-    "push": "drizzle-kit push:sqlite && npx tsx ./drizzle/initializeDatabase.ts",
+    "generate": "drizzle-kit generate",
+    "push": "drizzle-kit push && npx tsx ./drizzle/initializeDatabase.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
