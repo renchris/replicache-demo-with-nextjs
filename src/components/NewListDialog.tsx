@@ -1,6 +1,8 @@
 import { Portal } from '@ark-ui/react'
 import { Stack } from 'styled-system/jsx'
-import type { Dispatch, SetStateAction, KeyboardEvent } from 'react'
+import {
+  type Dispatch, type SetStateAction, type KeyboardEvent, useState,
+} from 'react'
 import { Button } from './park-ui/Button'
 import { Input } from './park-ui/Input'
 import { Label } from './park-ui/Label'
@@ -16,16 +18,22 @@ const NewListDialog = ({
 }:{
   listName: string,
   setListName: Dispatch<SetStateAction<string>>,
-  handleSubmitList: () => Promise<void>
+  handleSubmitList: () => Promise<void>,
   children: React.ReactNode }
 & DialogProps) => {
+  const [isOpen, setIsOpen] = useState(false)
   const handleKeyDown = async (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && listName.length > 0) {
       await handleSubmitList()
+      setIsOpen(false)
     }
   }
   return (
-    <Dialog.Root {...props}>
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={(e) => setIsOpen(e.open)}
+      {...props}
+    >
       <Dialog.Trigger asChild>
         {children}
       </Dialog.Trigger>
