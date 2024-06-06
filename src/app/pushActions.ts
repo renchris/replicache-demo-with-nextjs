@@ -1,6 +1,5 @@
 'use server'
 
-import Pusher from 'pusher'
 import { eq } from 'drizzle-orm'
 import type { MutationV1 } from 'replicache'
 import type {
@@ -104,12 +103,14 @@ function putClient(
   insertClientStatementQuery.run()
 }
 
-export async function processMutation(
+async function processMutation(
   clientGroupID: string,
   userID: string,
   mutation: MutationV1,
   error?: string | undefined,
-) {
+): Promise<{
+    affected: Affected;
+  }> {
   let affected: Affected = { listIDs: [], userIDs: [] }
   console.log(
     error === undefined ? 'Processing mutation' : 'Processing mutation error',
@@ -172,17 +173,4 @@ export async function processMutation(
   return { affected }
 }
 
-export async function sendPoke() {
-  const pusher = new Pusher({
-    appId: 'app-id',
-    key: 'app-key',
-    secret: 'app-secret',
-    useTLS: false,
-    cluster: '',
-    host: '127.0.0.1',
-    port: '6001',
-  })
-  pusher.trigger('default-channel', 'poke-event', {})
-  const t0 = Date.now()
-  console.log('👉 Sent poke in', Date.now() - t0)
-}
+export default processMutation

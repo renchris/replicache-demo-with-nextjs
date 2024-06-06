@@ -4,8 +4,7 @@ import Pusher from 'pusher-js'
 import type { Replicache } from 'replicache'
 import type { Mutators } from '@replicache/mutators'
 
-// eslint-disable-next-line import/prefer-default-export
-export const listen = (rep: Replicache<Mutators> | null) => {
+const listen = (rep: Replicache<Mutators> | null) => {
   if (rep) {
     console.log('👂 listening')
     Pusher.logToConsole = true
@@ -27,3 +26,5 @@ export const listen = (rep: Replicache<Mutators> | null) => {
     })
   }
 }
+
+export default listen
