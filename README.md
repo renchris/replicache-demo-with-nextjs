@@ -9,7 +9,7 @@
 
 A NextJS App Router project that follows the Replicache Demos: Todo Row Versioning, Introduction, and Build Your Own Back End.
 
-Please refer to the `main` branch for the Todo Row Versioning and `build-your-own-backend` branch for the Introduction and  Build Your Own Back End Demos.
+Please refer to the `main` branch for the Todo Row Versioning Demo, the `turso-database` branch for Turso as the database driver, and `build-your-own-backend` branch for the Introduction and  Build Your Own Back End Demos.
 
 ## 🥞 Stack Changes from Demos
 
