@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { PullRequestV1 } from 'replicache'
-import processPull from '@app/pullActions'
+import processPull from '@actions/replicache/pullActions'
 
 // eslint-disable-next-line import/prefer-default-export
 export async function POST(request: NextRequest) {

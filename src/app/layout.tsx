@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 import App from '@components/App'
-import { ReplicacheContextProvider } from 'src/lib/create-replicache-context'
+import { ReplicacheContextProvider } from '@lib/create-replicache-context'
 
 const inter = Inter({ subsets: ['latin'] })
 

@@ -11,7 +11,7 @@ import {
 import { Replicache } from 'replicache'
 import type { Mutators } from '@replicache/mutators'
 import { getRowVersioningReplicache } from '@replicache/constructor'
-import listen from '@app/listenActions'
+import listen from '@actions/replicache/listenActions'
 import { nanoid } from 'nanoid'
 
 type IReplicacheContext = {

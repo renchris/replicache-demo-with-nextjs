@@ -15,7 +15,7 @@ import {
   handleNewList,
   handleNewShare,
   handleUpdateTodo,
-} from '@app/todoActions'
+} from '@actions/replicache/todoActions'
 import { TodoUpdate } from '@replicache/types'
 import Header from './Header'
 import MainSection from './MainSection'
