@@ -8,15 +8,16 @@ import type {
 import {
   replicacheClient,
 } from 'drizzle/schema'
-import db from 'drizzle/db'
+import getDB from 'drizzle/db'
 import { getClientGroupForUpdate, putClientGroup } from './sharedActions'
 import {
   createList, createShare, createTodo, deleteList, deleteShare, deleteTodo, updateTodo,
 } from './appActions'
 
-function getClient(
+async function getClient(
   clientID: string,
-): Omit<ClientRecord, 'id'> {
+): Promise<Omit<ClientRecord, 'id'>> {
+  const db = await getDB()
   const clientRowStatementQuery = db
     .select({
       clientGroupID: replicacheClient.clientGroupID,
@@ -27,7 +28,7 @@ function getClient(
     .where(eq(replicacheClient.id, clientID))
     .prepare()
 
-  const clientRow = clientRowStatementQuery.get() || {
+  const clientRow = await clientRowStatementQuery.get() || {
     clientGroupID: '',
     lastMutationID: 0,
     clientVersion: 0,
@@ -36,10 +37,10 @@ function getClient(
   return clientRow
 }
 
-function getClientForUpdate(
+async function getClientForUpdate(
   clientID: string,
-): ClientRecord {
-  const previousClient = getClient(clientID)
+): Promise<ClientRecord> {
+  const previousClient = await getClient(clientID)
   return {
     id: clientID,
     clientGroupID: previousClient.clientGroupID,
@@ -75,12 +76,13 @@ async function mutate(
   }
 }
 
-function putClient(
+async function putClient(
   client: ClientRecord,
 ) {
   const {
     id, clientGroupID, lastMutationID, clientVersion,
   } = client
+  const db = await getDB()
   const insertClientStatementQuery = db
     .insert(replicacheClient)
     .values({
@@ -100,7 +102,7 @@ function putClient(
     })
     .prepare()
 
-  insertClientStatementQuery.run()
+  await insertClientStatementQuery.run()
 }
 
 async function processMutation(
@@ -118,7 +120,7 @@ async function processMutation(
   )
 
   const baseClientGroup = await getClientGroupForUpdate(clientGroupID)
-  const baseClient = getClientForUpdate(mutation.clientID)
+  const baseClient = await getClientForUpdate(mutation.clientID)
 
   console.log('baseClientGroup', { baseClientGroup }, 'baseClient', { baseClient })
 
@@ -168,7 +170,7 @@ async function processMutation(
   }
 
   await putClientGroup(nextClientGroup)
-  putClient(nextClient)
+  await putClient(nextClient)
 
   return { affected }
 }

@@ -9,7 +9,7 @@ import type {
 import {
   replicacheClient,
 } from 'drizzle/schema'
-import db from 'drizzle/db'
+import getDB from 'drizzle/db'
 import type {
   Cookie, ClientRecord, ClientViewRecord, List, SearchResult, Share, Todo,
 } from '@replicache/types'
@@ -47,7 +47,8 @@ function getBaseCVR(
   return { previousCVR, baseCVR }
 }
 
-function searchClients(clientGroupID: string, sinceClientVersion: number) {
+async function searchClients(clientGroupID: string, sinceClientVersion: number) {
+  const db = await getDB()
   const clientRowStatementQuery = db
     .select({
       id: replicacheClient.id,
@@ -61,7 +62,7 @@ function searchClients(clientGroupID: string, sinceClientVersion: number) {
     ))
     .prepare()
 
-  const clientRows = clientRowStatementQuery.all()
+  const clientRows = await clientRowStatementQuery.all()
 
   const clients = clientRows.map((row) => {
     const client: ClientRecord = {
@@ -96,7 +97,7 @@ async function pullForChanges(
     todos: Todo[];
   }> {
   const baseClientGroupRecord = await getClientGroupForUpdate(clientGroupID)
-  const clientChanges = searchClients(clientGroupID, baseCVR.clientVersion)
+  const clientChanges = await searchClients(clientGroupID, baseCVR.clientVersion)
   const listMeta = await searchLists(userID)
 
   const listIDs = listMeta.map((listRow) => listRow.id)
@@ -199,7 +200,7 @@ async function processPull(
   const { clientGroupID, cookie } = pull
   const replicacheCookie = cookie as Cookie
   const { previousCVR, baseCVR } = getBaseCVR(clientGroupID, replicacheCookie)
-
+  const db = await getDB()
   const {
     nextCVRVersion,
     nextCVR,

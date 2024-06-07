@@ -1,6 +1,6 @@
 'use server'
 
-import db from 'drizzle/db'
+import getDB from 'drizzle/db'
 import { item, list, share } from 'drizzle/schema'
 import {
   and, eq, inArray, or, sql,
@@ -40,6 +40,7 @@ export async function getDelsSince(
 
 export async function getLists(listIDs: string[]): Promise<List[]> {
   if (listIDs.length === 0) return []
+  const db = await getDB()
   const listStatemenetQuery = db
     .select({
       id: list.id,
@@ -50,7 +51,7 @@ export async function getLists(listIDs: string[]): Promise<List[]> {
     .where(inArray(list.id, listIDs))
     .prepare()
 
-  const listRows = listStatemenetQuery.all()
+  const listRows = await listStatemenetQuery.all()
   const lists = listRows.map((row) => {
     const listItem: List = {
       id: row.id,
@@ -69,6 +70,7 @@ export async function createList(
   if (userID !== listToInsert.ownerID) {
     throw new Error('Authorization error, cannot create list for other user')
   }
+  const db = await getDB()
   const { id, ownerID, name } = listToInsert
   const insertListStatementQuery = db
     .insert(list)
@@ -81,7 +83,7 @@ export async function createList(
     })
     .prepare()
 
-  insertListStatementQuery.run()
+  await insertListStatementQuery.run()
 
   return { listIDs: [], userIDs: [ownerID] }
 }
@@ -89,6 +91,7 @@ export async function createList(
 export async function searchLists(
   accessibleByUserID: string,
 ): Promise<SearchResult[]> {
+  const db = await getDB()
   const shareRowStatementSubquery = db
     .select({
       id: share.listID,
@@ -110,7 +113,7 @@ export async function searchLists(
     )
     .prepare()
 
-  const listRows = listRowStatementQuery.all()
+  const listRows = await listRowStatementQuery.all()
 
   return listRows
 }
@@ -126,7 +129,7 @@ export async function searchTodosAndShares(listIDs: string[]): Promise<{
   }[];
 }> {
   if (listIDs.length === 0) return { shareMeta: [], todoMeta: [] }
-
+  const db = await getDB()
   const shareStatementQuery = db
     .select({
       id: share.id,
@@ -146,7 +149,7 @@ export async function searchTodosAndShares(listIDs: string[]): Promise<{
     .from(item)
     .where(inArray(item.listID, listIDs))
 
-  const sharesAndTodos = unionAll(
+  const sharesAndTodos = await unionAll(
     shareStatementQuery,
     todoStatementQuery,
   )
@@ -168,10 +171,11 @@ export async function searchTodosAndShares(listIDs: string[]): Promise<{
   return result
 }
 
-function requireAccessToList(
+async function requireAccessToList(
   listID: string,
   accessingUserID: string,
 ) {
+  const db = await getDB()
   const shareListIdSubquery = db
     .select({ listID: share.listID })
     .from(share)
@@ -191,14 +195,15 @@ function requireAccessToList(
     )
     .prepare()
 
-  const [{ numberOfRows }] = listRowStatementQuery.all()
+  const [{ numberOfRows }] = await listRowStatementQuery.all()
 
   if (numberOfRows === 0) {
     throw new Error("Authorization error, can't access list")
   }
 }
 
-function getAccessors(listID: string) {
+async function getAccessors(listID: string) {
+  const db = await getDB()
   const ownerIDStatementQuery = db
     .select({ userID: list.ownerID })
     .from(list)
@@ -209,7 +214,7 @@ function getAccessors(listID: string) {
     .from(share)
     .where(eq(share.listID, listID))
 
-  const userIdRows = union(ownerIDStatementQuery, userIDStatementQuery)
+  const userIdRows = await union(ownerIDStatementQuery, userIDStatementQuery)
     .prepare()
     .all()
 
@@ -220,14 +225,15 @@ export async function deleteList(
   userID: string,
   listID: string,
 ): Promise<Affected> {
-  requireAccessToList(listID, userID)
-  const userIDs = getAccessors(listID)
+  await requireAccessToList(listID, userID)
+  const db = await getDB()
+  const userIDs = await getAccessors(listID)
   const deleteListStatementQuery = db
     .delete(list)
     .where(eq(list.id, listID))
     .prepare()
 
-  deleteListStatementQuery.run()
+  await deleteListStatementQuery.run()
 
   return {
     listIDs: [],
@@ -242,14 +248,15 @@ export async function createTodo(
     listIDs: string[];
     userIDs: [];
   }> {
-  requireAccessToList(todo.listID, userID)
+  await requireAccessToList(todo.listID, userID)
+  const db = await getDB()
   const maxOrdRowStatementQuery = db
     .select({ maxOrd: sql<number>`max(${item.ord})` })
     .from(item)
     .where(eq(item.listID, todo.listID))
     .prepare()
 
-  const { maxOrd } = maxOrdRowStatementQuery.get() || { maxOrd: 0 }
+  const { maxOrd } = await maxOrdRowStatementQuery.get() || { maxOrd: 0 }
 
   const {
     id, listID, text, complete,
@@ -268,7 +275,7 @@ export async function createTodo(
     })
     .prepare()
 
-  insertItemStatementQuery.run()
+  await insertItemStatementQuery.run()
 
   return { listIDs: [todo.listID], userIDs: [] }
 }
@@ -280,8 +287,9 @@ export async function createShare(
     listIDs: string[];
     userIDs: string[];
   }> {
-  requireAccessToList(shareToInsert.listID, userIDForAccess)
+  await requireAccessToList(shareToInsert.listID, userIDForAccess)
   const { id, listID, userID } = shareToInsert
+  const db = await getDB()
   const insertShareStatementQuery = db
     .insert(share)
     .values({
@@ -293,7 +301,7 @@ export async function createShare(
     })
     .prepare()
 
-  insertShareStatementQuery.run()
+  await insertShareStatementQuery.run()
 
   return {
     listIDs: [listID],
@@ -304,6 +312,7 @@ export async function createShare(
 export async function getShares(shareIDs: string[]): Promise<Share[]> {
   if (shareIDs.length === 0) return []
 
+  const db = await getDB()
   const shareRowStatementQuery = db
     .select({
       id: share.id,
@@ -314,7 +323,7 @@ export async function getShares(shareIDs: string[]): Promise<Share[]> {
     .where(inArray(share.id, shareIDs))
     .prepare()
 
-  const shareRows = shareRowStatementQuery.all()
+  const shareRows = await shareRowStatementQuery.all()
 
   const shares = shareRows ? shareRows.map((row) => {
     const shareToGet: Share = {
@@ -338,13 +347,14 @@ export async function deleteShare(
 
   const { listID, userID } = shareToDelete
 
-  requireAccessToList(listID, userIDForAccess)
+  await requireAccessToList(listID, userIDForAccess)
+  const db = await getDB()
   const deleteShareQueryStatement = db
     .delete(share)
     .where(eq(share.id, id))
     .prepare()
 
-  deleteShareQueryStatement.run()
+  await deleteShareQueryStatement.run()
 
   return {
     listIDs: [listID],
@@ -354,6 +364,7 @@ export async function deleteShare(
 
 export async function getTodos(todoIDs: string[]): Promise<Todo[]> {
   if (todoIDs.length === 0) return []
+  const db = await getDB()
   const todoRowStatementQuery = db
     .select({
       id: item.id,
@@ -366,7 +377,7 @@ export async function getTodos(todoIDs: string[]): Promise<Todo[]> {
     .where(inArray(item.id, todoIDs))
     .prepare()
 
-  const todoRows = todoRowStatementQuery.all()
+  const todoRows = await todoRowStatementQuery.all()
 
   const todos = todoRows.map((row) => {
     const todoToGet: Todo = {
@@ -395,13 +406,14 @@ export async function updateTodo(
   todoToUpdate: TodoUpdate,
 ): Promise<Affected> {
   const { listID } = await mustGetTodo(todoToUpdate.id)
-  requireAccessToList(listID, userID)
+  await requireAccessToList(listID, userID)
   const {
     text = null, complete = null, sort = null, id,
   } = todoToUpdate
 
   const completeAsInteger = complete !== null ? Number(complete) : null
 
+  const db = await getDB()
   const updateItemStatementQuery = db
     .update(item)
     .set({
@@ -414,7 +426,7 @@ export async function updateTodo(
     .where(eq(item.id, id))
     .prepare()
 
-  updateItemStatementQuery.run()
+  await updateItemStatementQuery.run()
 
   return {
     listIDs: [listID],
@@ -427,13 +439,14 @@ export async function deleteTodo(
   todoID: string,
 ): Promise<Affected> {
   const { listID } = await mustGetTodo(todoID)
-  requireAccessToList(listID, userID)
+  await requireAccessToList(listID, userID)
+  const db = await getDB()
   const deleteTodoStatementQuery = db
     .delete(item)
     .where(eq(item.id, todoID))
     .prepare()
 
-  deleteTodoStatementQuery.run()
+  await deleteTodoStatementQuery.run()
 
   return {
     listIDs: [listID],

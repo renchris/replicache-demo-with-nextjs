@@ -5,11 +5,12 @@ import {
   replicacheClientGroup,
 } from 'drizzle/schema'
 import { eq } from 'drizzle-orm'
-import db from 'drizzle/db'
+import getDB from 'drizzle/db'
 
 export async function putClientGroup(
   clientGroup: ClientGroupRecord,
 ): Promise<void> {
+  const db = await getDB()
   const { id, cvrVersion, clientGroupVersion } = clientGroup
   const insertClientGroupStatementQuery = db
     .insert(replicacheClientGroup)
@@ -29,12 +30,13 @@ export async function putClientGroup(
     })
     .prepare()
 
-  insertClientGroupStatementQuery.run()
+  await insertClientGroupStatementQuery.run()
 }
 
-function getClientGroup(
+async function getClientGroup(
   clientGroupID: string,
-): Omit<ClientGroupRecord, 'id'> {
+): Promise<Omit<ClientGroupRecord, 'id'>> {
+  const db = await getDB()
   const clientGroupRowStatementQuery = db
     .select({
       cvrVersion: replicacheClientGroup.cvrVersion,
@@ -44,7 +46,7 @@ function getClientGroup(
     .where(eq(replicacheClientGroup.id, clientGroupID))
     .prepare()
 
-  const clientGroupRow = clientGroupRowStatementQuery.get() || {
+  const clientGroupRow = await clientGroupRowStatementQuery.get() || {
     clientGroupVersion: 0,
     cvrVersion: null,
   }
@@ -55,7 +57,7 @@ function getClientGroup(
 export async function getClientGroupForUpdate(
   clientGroupID: string,
 ): Promise<ClientGroupRecord> {
-  const previousClientGroup = getClientGroup(clientGroupID)
+  const previousClientGroup = await getClientGroup(clientGroupID)
   return {
     id: clientGroupID,
     clientGroupVersion: previousClientGroup.clientGroupVersion,

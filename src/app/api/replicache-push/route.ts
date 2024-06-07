@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { MutationV1, PushRequestV1 } from 'replicache'
-import db from 'drizzle/db'
+import getDB from 'drizzle/db'
 import processMutation from '@actions/replicache/pushActions'
 import sendPoke from '@actions/replicache/pokeActions'
 
@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
     const { nextUrl: { searchParams } } = request
     const userID = searchParams.get('userID') ?? ''
     const push: PushRequestV1 = await request.json()
+    const db = await getDB()
     console.log('Processing push', JSON.stringify(push))
     t0 = Date.now()
 
