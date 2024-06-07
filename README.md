@@ -175,14 +175,17 @@ A quick look at the top-level files and directories where we made our feature ch
          ├── list
          |    └── [listIDSlug]
          |          └── page.tsx
-         ├── appActions.ts
+         ├── actions
+         |    └── replicache
+         |          ├── appActions.ts
+         |          ├── listenActions.ts
+         |          ├── pokeActions.ts
+         |          ├── pullActions.ts
+         |          ├── pushActions.ts
+         |          ├── sharedActions.ts
+         |          └── todoActions.ts
          ├── layout.tsx
          ├── page.tsx
-         ├── pullActions.ts
-         ├── pushActions.ts
-         ├── replicacheActions.ts
-         ├── sharedActions.ts
-         ├── todoActions.ts
          ├── components
          |    ├── park-ui
          |    |    ├── ...
@@ -232,13 +235,17 @@ A quick look at the top-level files and directories where we made our feature ch
 
 1. **`src/app/page.tsx`**: This file contains the code for the home root front-end page. See [NextJS Documentation: Pages](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts#pages)
 
+1. **`src/app/actions/replicache`**: This directory will contain all of our server action files related to Replicache.
+
 1. **`/appActions.ts`**: This file contains the CRUD functions that interact with Drizzle and our remote SQLite database.
+
+1. **`/listenActions.ts`**: This file contains the Pusher client-side helper function to listen for pokes.
+
+1. **`/pokeActions.ts`**: This file contains the Pusher server-side helper function to send pokes.
 
 1. **`/pullActions.ts`**: This file contains the process pull helper functions.
 
-1. **`/pushActions.ts`**: This file contains the process push helper functions and the send poke function.
-
-1. **`/replicacheActions.ts`**: This file contains the Replicache action helper functions and the listen for pokes function.
+1. **`/pushActions.ts`**: This file contains the process push helper functions.
 
 1. **`/sharedActions.ts`**: This file contains the helper functions that relate to Client Group that are both used by process pull and process push.
 
