@@ -1,6 +1,6 @@
 import { css } from '@styled-system/css'
+import type { EditableRootProps } from '@ark-ui/react'
 import { Button } from './park-ui/Button'
-import type { EditableProps } from './park-ui/Editable'
 import * as Editable from './park-ui/Editable'
 
 const ItemEditable = ({
@@ -8,43 +8,41 @@ const ItemEditable = ({
   ...props
 } : {
   isEditing: boolean,
-} & EditableProps) => (
+} & EditableRootProps) => (
   <Editable.Root
     activationMode="dblclick"
     autoResize
     {...props}
   >
-    {() => (
-      <div className={css({
-        display: 'flex',
-        flexDir: 'row',
+    <div className={css({
+      display: 'flex',
+      flexDir: 'row',
+    })}
+    >
+      <Editable.Area width="100%">
+        <Editable.Input position="absolute" display="inline-flex" />
+        <Editable.Preview />
+      </Editable.Area>
+      <Editable.Control className={css({
+        marginLeft: '8px',
       })}
       >
-        <Editable.Area width="100%">
-          <Editable.Input position="absolute" display="inline-flex" />
-          <Editable.Preview />
-        </Editable.Area>
-        <Editable.Control className={css({
-          marginLeft: '8px',
-        })}
-        >
-          {isEditing ? (
-            <>
-              <Editable.SubmitTrigger asChild>
-                <Button variant="link">Save</Button>
-              </Editable.SubmitTrigger>
-              <Editable.CancelTrigger asChild>
-                <Button variant="link">Cancel</Button>
-              </Editable.CancelTrigger>
-            </>
-          ) : (
-            <Editable.EditTrigger asChild>
-              <Button variant="link">Edit</Button>
-            </Editable.EditTrigger>
-          )}
-        </Editable.Control>
-      </div>
-    )}
+        {isEditing ? (
+          <>
+            <Editable.SubmitTrigger asChild>
+              <Button variant="link">Save</Button>
+            </Editable.SubmitTrigger>
+            <Editable.CancelTrigger asChild>
+              <Button variant="link">Cancel</Button>
+            </Editable.CancelTrigger>
+          </>
+        ) : (
+          <Editable.EditTrigger asChild>
+            <Button variant="link">Edit</Button>
+          </Editable.EditTrigger>
+        )}
+      </Editable.Control>
+    </div>
   </Editable.Root>
 )
 

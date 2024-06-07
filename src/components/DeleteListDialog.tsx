@@ -2,10 +2,10 @@ import { Portal } from '@ark-ui/react'
 import { Stack } from 'styled-system/jsx'
 import { useRef } from 'react'
 import type { KeyboardEvent } from 'react'
+import { css } from '@styled-system/css'
 import { Button } from './park-ui/Button'
-import type { DialogProps } from './park-ui/Dialog'
 import * as Dialog from './park-ui/Dialog'
-import { Label } from './park-ui/Label'
+import { FormLabel } from './park-ui/FormLabel'
 
 const DeleteListDialog = ({
   handleDeleteList,
@@ -16,7 +16,7 @@ const DeleteListDialog = ({
   handleDeleteList: () => Promise<void>,
   selectedListName: string,
   children: React.ReactNode }
-& DialogProps) => {
+& Dialog.RootProps) => {
   const handleKeyDown = async (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter') {
       await handleDeleteList()
@@ -35,9 +35,9 @@ const DeleteListDialog = ({
             <Stack gap="8" p="6">
               <Dialog.Title>Delete the current list?</Dialog.Title>
               <Dialog.Description>
-                <Label color="#202020" fontWeight="medium">
+                <FormLabel color="#202020" fontWeight="medium">
                   {selectedListName}
-                </Label>
+                </FormLabel>
               </Dialog.Description>
               <Stack gap="3" direction="row" width="full">
                 <Dialog.CloseTrigger asChild>
@@ -46,14 +46,16 @@ const DeleteListDialog = ({
                   </Button>
                 </Dialog.CloseTrigger>
                 <Dialog.CloseTrigger asChild>
-                  <Button
-                    ref={confirmButtonRef}
-                    width="full"
-                    onClick={() => handleDeleteList()}
-                    onKeyDown={handleKeyDown}
-                  >
-                    Confirm
-                  </Button>
+                  <div className={css({ width: '100%' })}>
+                    <Button
+                      ref={confirmButtonRef}
+                      width="full"
+                      onClick={() => handleDeleteList()}
+                      onKeyDown={handleKeyDown}
+                    >
+                      Confirm
+                    </Button>
+                  </div>
                 </Dialog.CloseTrigger>
               </Stack>
             </Stack>

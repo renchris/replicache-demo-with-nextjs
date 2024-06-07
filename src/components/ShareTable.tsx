@@ -1,6 +1,5 @@
 import { Share } from '@replicache/types'
 import { Button, ExitIcon } from './park-ui/Button'
-import type { TableProps } from './park-ui/Table'
 import * as Table from './park-ui/Table'
 
 const ShareTable = ({
@@ -10,7 +9,7 @@ const ShareTable = ({
 }: {
   guests: Share[] | [],
   handleDeleteCollaborator: (id: string) => Promise<void>,
-} & TableProps) => (
+} & Table.RootProps) => (
   <Table.Root {...props}>
     <Table.Caption>Shared Guests</Table.Caption>
     <Table.Head>
@@ -46,7 +45,7 @@ const ShareTable = ({
         </Table.Row>
       ))}
     </Table.Body>
-    <Table.Footer>
+    <Table.Foot>
       <Table.Row>
         <Table.Cell colSpan={2}>Totals</Table.Cell>
         <Table.Cell colSpan={2} textAlign="right">
@@ -56,7 +55,7 @@ const ShareTable = ({
           Guests
         </Table.Cell>
       </Table.Row>
-    </Table.Footer>
+    </Table.Foot>
   </Table.Root>
 )
 

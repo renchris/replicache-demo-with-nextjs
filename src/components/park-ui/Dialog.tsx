@@ -1,53 +1,52 @@
-import { Dialog as ArkDialog } from '@ark-ui/react/dialog'
-import type { ComponentProps } from 'react'
-import { styled } from 'styled-system/jsx'
-import { dialog } from 'styled-system/recipes'
-import { createStyleContext } from 'src/lib/create-style-context'
+import type { Assign } from '@ark-ui/react'
+import { Dialog } from '@ark-ui/react/dialog'
+import { type DialogVariantProps, dialog } from 'styled-system/recipes'
+import type { JsxStyleProps } from 'styled-system/types'
+import createStyleContext from '@lib/create-style-context'
 
-const { withProvider, withContext } = createStyleContext(dialog)
+const { withRootProvider, withContext } = createStyleContext(dialog)
 
-const Dialog = withProvider(ArkDialog.Root)
-const DialogBackdrop = withContext(styled(ArkDialog.Backdrop), 'backdrop')
-const DialogCloseTrigger = withContext(styled(ArkDialog.CloseTrigger), 'closeTrigger')
-const DialogContent = withContext(styled(ArkDialog.Content), 'content')
-const DialogDescription = withContext(styled(ArkDialog.Description), 'description')
-const DialogPositioner = withContext(styled(ArkDialog.Positioner), 'positioner')
-const DialogTitle = withContext(styled(ArkDialog.Title), 'title')
-const DialogTrigger = withContext(styled(ArkDialog.Trigger), 'trigger')
+export interface RootProps extends Dialog.RootProps, DialogVariantProps {
+  [key: string]: unknown
+}
+export const Root = withRootProvider<RootProps>(Dialog.Root)
 
-const Root = Dialog
-const Backdrop = DialogBackdrop
-const CloseTrigger = DialogCloseTrigger
-const Content = DialogContent
-const Description = DialogDescription
-const Positioner = DialogPositioner
-const Title = DialogTitle
-const Trigger = DialogTrigger
+export const Backdrop = withContext<HTMLDivElement, Assign<JsxStyleProps, Dialog.BackdropProps>>(
+  Dialog.Backdrop,
+  'backdrop',
+)
+
+export const CloseTrigger = withContext<
+HTMLButtonElement,
+Assign<JsxStyleProps, Dialog.CloseTriggerProps>
+>(Dialog.CloseTrigger, 'closeTrigger')
+
+export const Content = withContext<HTMLDivElement, Assign<JsxStyleProps, Dialog.ContentProps>>(
+  Dialog.Content,
+  'content',
+)
+
+export const Description = withContext<
+HTMLParagraphElement,
+Assign<JsxStyleProps, Dialog.DescriptionProps>
+>(Dialog.Description, 'description')
+
+export const Positioner = withContext<
+HTMLDivElement,
+Assign<JsxStyleProps, Dialog.PositionerProps>
+>(Dialog.Positioner, 'positioner')
+
+export const Title = withContext<HTMLHeadingElement, Assign<JsxStyleProps, Dialog.TitleProps>>(
+  Dialog.Title,
+  'title',
+)
+
+export const Trigger = withContext<HTMLButtonElement, Assign<JsxStyleProps, Dialog.TriggerProps>>(
+  Dialog.Trigger,
+  'trigger',
+)
 
 export {
-  Backdrop,
-  CloseTrigger,
-  Content,
-  Description,
-  Dialog,
-  DialogBackdrop,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogDescription,
-  DialogPositioner,
-  DialogTitle,
-  DialogTrigger,
-  Positioner,
-  Root,
-  Title,
-  Trigger,
-}
-
-export interface DialogProps extends ComponentProps<typeof Dialog> {}
-export interface DialogBackdropProps extends ComponentProps<typeof DialogBackdrop> {}
-export interface DialogCloseTriggerProps extends ComponentProps<typeof DialogCloseTrigger> {}
-export interface DialogContentProps extends ComponentProps<typeof DialogContent> {}
-export interface DialogDescriptionProps extends ComponentProps<typeof DialogDescription> {}
-export interface DialogPositionerProps extends ComponentProps<typeof DialogPositioner> {}
-export interface DialogTitleProps extends ComponentProps<typeof DialogTitle> {}
-export interface DialogTriggerProps extends ComponentProps<typeof DialogTrigger> {}
+  DialogContext as Context,
+  type DialogContextProps as ContextProps,
+} from '@ark-ui/react/dialog'

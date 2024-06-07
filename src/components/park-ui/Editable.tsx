@@ -1,58 +1,57 @@
-import { Editable as ArkEditable } from '@ark-ui/react/editable'
-import type { ComponentProps } from 'react'
-import { styled } from 'styled-system/jsx'
-import { editable } from 'styled-system/recipes'
-import { createStyleContext } from 'src/lib/create-style-context'
+import type { Assign } from '@ark-ui/react'
+import { Editable } from '@ark-ui/react/editable'
+import { type EditableVariantProps, editable } from 'styled-system/recipes'
+import type { JsxStyleProps } from 'styled-system/types'
+import createStyleContext from '@lib/create-style-context'
 
 const { withProvider, withContext } = createStyleContext(editable)
 
-const Editable = withProvider(styled(ArkEditable.Root), 'root')
-const EditableArea = withContext(styled(ArkEditable.Area), 'area')
-const EditableCancelTrigger = withContext(styled(ArkEditable.CancelTrigger), 'cancelTrigger')
-const EditableControl = withContext(styled(ArkEditable.Control), 'control')
-const EditableEditTrigger = withContext(styled(ArkEditable.EditTrigger), 'editTrigger')
-const EditableInput = withContext(styled(ArkEditable.Input), 'input')
-const EditableLabel = withContext(styled(ArkEditable.Label), 'label')
-const EditablePreview = withContext(styled(ArkEditable.Preview), 'preview')
-const EditableSubmitTrigger = withContext(styled(ArkEditable.SubmitTrigger), 'submitTrigger')
+export interface RootProps
+  extends Assign<JsxStyleProps, Editable.RootProps>,
+  EditableVariantProps {}
+export const Root = withProvider<HTMLDivElement, RootProps>(Editable.Root, 'root')
 
-const Root = Editable
-const Area = EditableArea
-const CancelTrigger = EditableCancelTrigger
-const Control = EditableControl
-const EditTrigger = EditableEditTrigger
-const Input = EditableInput
-const Label = EditableLabel
-const Preview = EditablePreview
-const SubmitTrigger = EditableSubmitTrigger
+export const Area = withContext<HTMLDivElement, Assign<JsxStyleProps, Editable.AreaProps>>(
+  Editable.Area,
+  'area',
+)
+
+export const CancelTrigger = withContext<
+HTMLButtonElement,
+Assign<JsxStyleProps, Editable.CancelTriggerProps>
+>(Editable.CancelTrigger, 'cancelTrigger')
+
+export const Control = withContext<HTMLDivElement, Assign<JsxStyleProps, Editable.ControlProps>>(
+  Editable.Control,
+  'control',
+)
+
+export const EditTrigger = withContext<
+HTMLButtonElement,
+Assign<JsxStyleProps, Editable.EditTriggerProps>
+>(Editable.EditTrigger, 'editTrigger')
+
+export const Input = withContext<HTMLInputElement, Assign<JsxStyleProps, Editable.InputProps>>(
+  Editable.Input,
+  'input',
+)
+
+export const Label = withContext<HTMLLabelElement, Assign<JsxStyleProps, Editable.LabelProps>>(
+  Editable.Label,
+  'label',
+)
+
+export const Preview = withContext<HTMLSpanElement, Assign<JsxStyleProps, Editable.PreviewProps>>(
+  Editable.Preview,
+  'preview',
+)
+
+export const SubmitTrigger = withContext<
+HTMLButtonElement,
+Assign<JsxStyleProps, Editable.SubmitTriggerProps>
+>(Editable.SubmitTrigger, 'submitTrigger')
 
 export {
-  Area,
-  CancelTrigger,
-  Control,
-  EditTrigger,
-  Editable,
-  EditableArea,
-  EditableCancelTrigger,
-  EditableControl,
-  EditableEditTrigger,
-  EditableInput,
-  EditableLabel,
-  EditablePreview,
-  EditableSubmitTrigger,
-  Input,
-  Label,
-  Preview,
-  Root,
-  SubmitTrigger,
-}
-
-export interface EditableProps extends ComponentProps<typeof Editable> {}
-export interface EditableAreaProps extends ComponentProps<typeof EditableArea> {}
-export interface EditableCancelTriggerProps extends ComponentProps<typeof EditableCancelTrigger> {}
-export interface EditableControlProps extends ComponentProps<typeof EditableControl> {}
-export interface EditableEditTriggerProps extends ComponentProps<typeof EditableEditTrigger> {}
-export interface EditableInputProps extends ComponentProps<typeof EditableInput> {}
-export interface EditableLabelProps extends ComponentProps<typeof EditableLabel> {}
-export interface EditablePreviewProps extends ComponentProps<typeof EditablePreview> {}
-export interface EditableSubmitTriggerProps extends ComponentProps<typeof EditableSubmitTrigger> {}
+  EditableContext as Context,
+  type EditableContextProps as ContextProps,
+} from '@ark-ui/react/editable'

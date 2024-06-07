@@ -5,8 +5,7 @@ import { useState } from 'react'
 import { css } from '@styled-system/css'
 import { Button } from './park-ui/Button'
 import { Input } from './park-ui/Input'
-import { Label } from './park-ui/Label'
-import type { DialogProps } from './park-ui/Dialog'
+import { FormLabel } from './park-ui/FormLabel'
 import * as Dialog from './park-ui/Dialog'
 import ShareTable from './ShareTable'
 
@@ -21,7 +20,7 @@ const ShareListDialog = ({
   handleDeleteCollaborator: (id: string) => Promise<void>,
   guests: Share[] | [],
   children: React.ReactNode }
-& DialogProps) => {
+& Dialog.RootProps) => {
   const [shareUserID, setShareUserID] = useState<string>('')
   return (
     <Dialog.Root {...props}>
@@ -41,7 +40,7 @@ const ShareListDialog = ({
               <Stack gap="1">
                 <Dialog.Title>Add Collaborator</Dialog.Title>
                 <Dialog.Description>
-                  <Label color="#202020" fontWeight="medium">Guest ID</Label>
+                  <FormLabel color="#202020" fontWeight="medium">Guest ID</FormLabel>
                 </Dialog.Description>
                 <div className={css({
                   display: 'flex',
@@ -63,7 +62,7 @@ const ShareListDialog = ({
               </Stack>
               <Stack gap="1">
                 <Dialog.Title>Current Collaborators</Dialog.Title>
-                <Label color="#202020" fontWeight="medium">{guests.length > 0 ? 'Guests' : 'No Guests'}</Label>
+                <FormLabel color="#202020" fontWeight="medium">{guests.length > 0 ? 'Guests' : 'No Guests'}</FormLabel>
                 <ShareTable
                   guests={guests}
                   handleDeleteCollaborator={handleDeleteCollaborator}

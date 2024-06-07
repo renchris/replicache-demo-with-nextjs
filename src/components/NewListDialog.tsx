@@ -5,8 +5,7 @@ import {
 } from 'react'
 import { Button } from './park-ui/Button'
 import { Input } from './park-ui/Input'
-import { Label } from './park-ui/Label'
-import type { DialogProps } from './park-ui/Dialog'
+import { FormLabel } from './park-ui/FormLabel'
 import * as Dialog from './park-ui/Dialog'
 
 const NewListDialog = ({
@@ -20,10 +19,11 @@ const NewListDialog = ({
   setListName: Dispatch<SetStateAction<string>>,
   handleSubmitList: () => Promise<void>,
   children: React.ReactNode }
-& DialogProps) => {
+& Dialog.RootProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const handleKeyDown = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && listName.length > 0) {
+      e.preventDefault()
       await handleSubmitList()
       setIsOpen(false)
     }
@@ -45,7 +45,7 @@ const NewListDialog = ({
               <Stack gap="1">
                 <Dialog.Title>List</Dialog.Title>
                 <Dialog.Description>
-                  <Label color="#202020" fontWeight="medium" htmlFor="name">Name</Label>
+                  <FormLabel color="#202020" fontWeight="medium" htmlFor="name">Name</FormLabel>
                 </Dialog.Description>
                 <Input
                   id="name"

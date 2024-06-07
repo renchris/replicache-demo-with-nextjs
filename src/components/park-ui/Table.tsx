@@ -1,53 +1,47 @@
-import { ark } from '@ark-ui/react/factory'
-import type { ComponentProps } from 'react'
-import { styled } from 'styled-system/jsx'
-import { table } from 'styled-system/recipes'
-import { createStyleContext } from 'src/lib/create-style-context'
+import type { Assign } from '@ark-ui/react'
+import { type HTMLArkProps, ark } from '@ark-ui/react/factory'
+import { type TableVariantProps, table } from 'styled-system/recipes'
+import type { JsxStyleProps } from 'styled-system/types'
+import createStyleContext from '@lib/create-style-context'
 
 const { withProvider, withContext } = createStyleContext(table)
 
-const Table = withProvider(styled(ark.table), 'root')
-const TableBody = withContext(styled(ark.tbody), 'body')
-const TableCaption = withContext(styled(ark.caption), 'caption')
-const TableCell = withContext(styled(ark.td), 'cell')
-const TableFooter = withContext(styled(ark.tfoot), 'footer')
-const TableHead = withContext(styled(ark.thead), 'head')
-const TableHeader = withContext(styled(ark.th), 'header')
-const TableRow = withContext(styled(ark.tr), 'row')
+export interface RootProps
+  extends Assign<JsxStyleProps, HTMLArkProps<'table'>>,
+  TableVariantProps {}
+export const Root = withProvider<HTMLTableElement, RootProps>(ark.table, 'root')
 
-const Root = Table
-const Body = TableBody
-const Caption = TableCaption
-const Cell = TableCell
-const Footer = TableFooter
-const Head = TableHead
-const Header = TableHeader
-const Row = TableRow
+export const Body = withContext<
+HTMLTableSectionElement,
+Assign<JsxStyleProps, HTMLArkProps<'tbody'>>
+>(ark.tbody, 'body')
 
-export {
-  Body,
-  Caption,
-  Cell,
-  Footer,
-  Head,
-  Header,
-  Root,
-  Row,
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-}
+export const Caption = withContext<
+HTMLTableCaptionElement,
+Assign<JsxStyleProps, HTMLArkProps<'caption'>>
+>(ark.caption, 'caption')
 
-export interface TableProps extends ComponentProps<typeof Table> {}
-export interface TableBodyProps extends ComponentProps<typeof TableBody> {}
-export interface TableCaptionProps extends ComponentProps<typeof TableCaption> {}
-export interface TableCellProps extends ComponentProps<typeof TableCell> {}
-export interface TableFooterProps extends ComponentProps<typeof TableFooter> {}
-export interface TableHeadProps extends ComponentProps<typeof TableHead> {}
-export interface TableHeaderProps extends ComponentProps<typeof TableHeader> {}
-export interface TableRowProps extends ComponentProps<typeof TableRow> {}
+export const Cell = withContext<HTMLTableCellElement, Assign<JsxStyleProps, HTMLArkProps<'td'>>>(
+  ark.td,
+  'cell',
+)
+
+export const Foot = withContext<
+HTMLTableSectionElement,
+Assign<JsxStyleProps, HTMLArkProps<'tfoot'>>
+>(ark.tfoot, 'footer')
+
+export const Head = withContext<
+HTMLTableSectionElement,
+Assign<JsxStyleProps, HTMLArkProps<'thead'>>
+>(ark.thead, 'head')
+
+export const Header = withContext<HTMLTableCellElement, Assign<JsxStyleProps, HTMLArkProps<'th'>>>(
+  ark.th,
+  'header',
+)
+
+export const Row = withContext<HTMLTableRowElement, Assign<JsxStyleProps, HTMLArkProps<'tr'>>>(
+  ark.tr,
+  'row',
+)
