@@ -3,6 +3,8 @@
         "PandaCSS",
         "Replicache",
         "Soketi",
-        "todos"
+        "todos",
+        "turso",
+        "libsql",
     ]
 }
