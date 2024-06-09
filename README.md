@@ -17,7 +17,7 @@ Please refer to the `main` branch for the Todo Row Versioning Demo, the `turso-d
 
 - PandaCSS
 
-- Postgres → Drizzle + SQLite (better-sqlite3)
+- Postgres → Drizzle + SQLite (Turso)
 
 - Pusher → Soketi
 
