@@ -45,6 +45,7 @@ const getDB = async (): Promise<LibSQLDatabase<typeof schema>> => {
   return db
 }
 
-export const serverID = 1
+const serverID = 1
+export const getServerID = async () => serverID
 
 export default getDB
