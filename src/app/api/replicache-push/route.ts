@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { MutationV1, PushRequestV1 } from 'replicache'
-import getDB from 'drizzle/db'
+import getDB, { type Transaction } from 'drizzle/db'
 import processMutation from '@actions/replicache/pushActions'
 import sendPoke from '@actions/replicache/pokeActions'
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       const t1 = Date.now()
       try {
         const result = await db.transaction(
-          async () => processMutation(push.clientGroupID, userID, mutation),
+          async (tx: Transaction) => processMutation(tx, push.clientGroupID, userID, mutation),
         )
         result.affected.listIDs.forEach((affectedListID) => {
           affected.listIDs.add(affectedListID)
@@ -36,7 +36,13 @@ export async function POST(request: NextRequest) {
         if (error instanceof Error) {
           const errorMessage = error.message
           await db.transaction(
-            async () => processMutation(push.clientGroupID, userID, mutation, errorMessage),
+            async (tx: Transaction) => processMutation(
+              tx,
+              push.clientGroupID,
+              userID,
+              mutation,
+              errorMessage,
+            ),
           )
         }
       }

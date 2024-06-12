@@ -1,9 +1,11 @@
 'use server'
 
-import { createClient, type Client } from '@libsql/client'
+import { createClient, type Client, type ResultSet } from '@libsql/client'
 import { drizzle, type LibSQLDatabase } from 'drizzle-orm/libsql'
 import * as schema from 'drizzle/schema'
 import { headers } from 'next/headers'
+import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core'
+import type { ExtractTablesWithRelations } from 'drizzle-orm'
 
 const getSubdomain = async (): Promise<string> => {
   const headersList = headers()
@@ -44,6 +46,8 @@ const getDB = async (): Promise<LibSQLDatabase<typeof schema>> => {
 
   return db
 }
+
+export type Transaction = SQLiteTransaction<'async', ResultSet, typeof schema, ExtractTablesWithRelations<typeof schema>>
 
 const serverID = 1
 export const getServerID = async () => serverID

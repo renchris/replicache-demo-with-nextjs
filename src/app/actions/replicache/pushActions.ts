@@ -8,17 +8,17 @@ import type {
 import {
   replicacheClient,
 } from 'drizzle/schema'
-import getDB from 'drizzle/db'
+import type { Transaction } from 'drizzle/db'
 import { getClientGroupForUpdate, putClientGroup } from './sharedActions'
 import {
   createList, createShare, createTodo, deleteList, deleteShare, deleteTodo, updateTodo,
 } from './appActions'
 
 async function getClient(
+  tx: Transaction,
   clientID: string,
 ): Promise<Omit<ClientRecord, 'id'>> {
-  const db = await getDB()
-  const clientRowStatementQuery = db
+  const clientRowStatementQuery = tx
     .select({
       clientGroupID: replicacheClient.clientGroupID,
       lastMutationID: replicacheClient.lastMutationID,
@@ -38,9 +38,10 @@ async function getClient(
 }
 
 async function getClientForUpdate(
+  tx: Transaction,
   clientID: string,
 ): Promise<ClientRecord> {
-  const previousClient = await getClient(clientID)
+  const previousClient = await getClient(tx, clientID)
   return {
     id: clientID,
     clientGroupID: previousClient.clientGroupID,
@@ -50,24 +51,25 @@ async function getClientForUpdate(
 }
 
 async function mutate(
+  tx: Transaction,
   userID: string,
   mutation: MutationV1,
 ): Promise<Affected> {
   switch (mutation.name) {
     case 'createList':
-      return createList(userID, mutation.args as ReplicacheList)
+      return createList(tx, userID, mutation.args as ReplicacheList)
     case 'deleteList':
-      return deleteList(userID, mutation.args as string)
+      return deleteList(tx, userID, mutation.args as string)
     case 'createTodo':
-      return createTodo(userID, mutation.args as Omit<Todo, 'sort'>)
+      return createTodo(tx, userID, mutation.args as Omit<Todo, 'sort'>)
     case 'createShare':
-      return createShare(userID, mutation.args as Share)
+      return createShare(tx, userID, mutation.args as Share)
     case 'deleteShare':
-      return deleteShare(userID, mutation.args as string)
+      return deleteShare(tx, userID, mutation.args as string)
     case 'updateTodo':
-      return updateTodo(userID, mutation.args as Todo)
+      return updateTodo(tx, userID, mutation.args as Todo)
     case 'deleteTodo':
-      return deleteTodo(userID, mutation.args as string)
+      return deleteTodo(tx, userID, mutation.args as string)
     default:
       return Promise.resolve({
         listIDs: [],
@@ -77,13 +79,13 @@ async function mutate(
 }
 
 async function putClient(
+  tx: Transaction,
   client: ClientRecord,
 ) {
   const {
     id, clientGroupID, lastMutationID, clientVersion,
   } = client
-  const db = await getDB()
-  const insertClientStatementQuery = db
+  const insertClientStatementQuery = tx
     .insert(replicacheClient)
     .values({
       id,
@@ -106,6 +108,7 @@ async function putClient(
 }
 
 async function processMutation(
+  tx: Transaction,
   clientGroupID: string,
   userID: string,
   mutation: MutationV1,
@@ -119,8 +122,8 @@ async function processMutation(
     JSON.stringify(mutation, null, ''),
   )
 
-  const baseClientGroup = await getClientGroupForUpdate(clientGroupID)
-  const baseClient = await getClientForUpdate(mutation.clientID)
+  const baseClientGroup = await getClientGroupForUpdate(tx, clientGroupID)
+  const baseClient = await getClientForUpdate(tx, mutation.clientID)
 
   console.log('baseClientGroup', { baseClientGroup }, 'baseClient', { baseClient })
 
@@ -146,7 +149,7 @@ async function processMutation(
   if (error === undefined) {
     console.log('Processing mutation:', JSON.stringify(mutation))
     try {
-      affected = await mutate(userID, mutation)
+      affected = await mutate(tx, userID, mutation)
     } catch (mutateError: unknown) {
     // TODO: You can store state here in the database to return to clients to
     // provide additional info about errors.
@@ -169,8 +172,8 @@ async function processMutation(
     clientVersion: nextClientVersion,
   }
 
-  await putClientGroup(nextClientGroup)
-  await putClient(nextClient)
+  await putClientGroup(tx, nextClientGroup)
+  await putClient(tx, nextClient)
 
   return { affected }
 }

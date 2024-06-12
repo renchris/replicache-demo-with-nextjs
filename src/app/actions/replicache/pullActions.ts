@@ -9,7 +9,7 @@ import type {
 import {
   replicacheClient,
 } from 'drizzle/schema'
-import getDB from 'drizzle/db'
+import getDB, { type Transaction } from 'drizzle/db'
 import type {
   Cookie, ClientRecord, ClientViewRecord, List, SearchResult, Share, Todo,
 } from '@replicache/types'
@@ -42,14 +42,13 @@ function getBaseCVR(
     clientVersion: 0,
   }
 
-  console.log({ previousCVR, baseCVR })
+  // console.log({ previousCVR, baseCVR })
 
   return { previousCVR, baseCVR }
 }
 
-async function searchClients(clientGroupID: string, sinceClientVersion: number) {
-  const db = await getDB()
-  const clientRowStatementQuery = db
+async function searchClients(tx: Transaction, clientGroupID: string, sinceClientVersion: number) {
+  const clientRowStatementQuery = tx
     .select({
       id: replicacheClient.id,
       lastMutationID: replicacheClient.lastMutationID,
@@ -84,6 +83,7 @@ function fromSearchResult(result: SearchResult[]): Map<string, number> {
 }
 
 async function pullForChanges(
+  tx: Transaction,
   clientGroupID: string,
   baseCVR: ClientViewRecord,
   userID: string,
@@ -96,14 +96,11 @@ async function pullForChanges(
     shares: Share[];
     todos: Todo[];
   }> {
-  const baseClientGroupRecord = await getClientGroupForUpdate(clientGroupID)
-  const clientChanges = await searchClients(clientGroupID, baseCVR.clientVersion)
-  const listMeta = await searchLists(userID)
-
+  const baseClientGroupRecord = await getClientGroupForUpdate(tx, clientGroupID)
+  const clientChanges = await searchClients(tx, clientGroupID, baseCVR.clientVersion)
+  const listMeta = await searchLists(tx, userID)
   const listIDs = listMeta.map((listRow) => listRow.id)
-
-  const { shareMeta, todoMeta } = await searchTodosAndShares(listIDs)
-
+  const { shareMeta, todoMeta } = await searchTodosAndShares(tx, listIDs)
   const nextCVR: ClientViewRecord = {
     list: fromSearchResult(listMeta),
     todo: fromSearchResult(todoMeta),
@@ -136,11 +133,10 @@ async function pullForChanges(
     listPuts, sharePuts, todoPuts, nextClientGroupRecord,
   })
 
-  const lists = await getLists(listPuts)
-  const shares = await getShares(sharePuts)
-  const todos = await getTodos(todoPuts)
-  await putClientGroup(nextClientGroupRecord)
-
+  const lists = await getLists(tx, listPuts)
+  const shares = await getShares(tx, sharePuts)
+  const todos = await getTodos(tx, todoPuts)
+  await putClientGroup(tx, nextClientGroupRecord)
   return {
     nextCVRVersion: nextClientGroupRecord.cvrVersion,
     nextCVR,
@@ -208,7 +204,8 @@ async function processPull(
     lists,
     shares,
     todos,
-  } = await db.transaction(async () => pullForChanges(
+  } = await db.transaction(async (tx: Transaction) => pullForChanges(
+    tx,
     clientGroupID,
     baseCVR,
     userID,
