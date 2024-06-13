@@ -34,7 +34,7 @@ const TodoItem = ({
   }
 
   useEffect(() => {
-    if (!isEditing) {
+    if (!isEditing && textInput !== todo.text) {
       setTextInput(todo.text)
     }
   }, [todo])
